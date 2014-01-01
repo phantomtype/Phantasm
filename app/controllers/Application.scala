@@ -20,10 +20,6 @@ object Application extends Controller with securesocial.core.SecureSocial {
     }
   }
 
-  def chatRoomJs(username: String) = Action { implicit request =>
-    Ok(views.js.chatRoom(username))
-  }
-
   def index = UserAwareAction { implicit rs =>
     user match {
       case Some(u) =>
@@ -39,7 +35,10 @@ object Application extends Controller with securesocial.core.SecureSocial {
   }
 
   def chat(roomId: Long, userId: Long) = WebSocket.async[JsValue] { request  =>
-    ChatRoom.join(roomId, userId)
+    ChatRoom.join(userId)
   }
 
+  def chatRoomJs(username: Long) = Action { implicit request =>
+    Ok(views.js.chatRoom(username))
+  }
 }

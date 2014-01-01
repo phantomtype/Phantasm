@@ -1,4 +1,4 @@
-@()(implicit flash: play.api.mvc.Flash, user:Option[securesocial.core.Identity])
+@()(implicit flash: play.api.mvc.Flash, user:Option[models.User])
 
 @import helper._
 @import controllers._
@@ -23,7 +23,7 @@
                 </div>
             </div>
 
-            <script type="text/javascript" charset="utf-8" src="@routes.Application.chatRoomJs(user.get.fullName)"></script>
+            <script type="text/javascript" charset="utf-8" src="@routes.Application.chatRoomJs(user.get.uid.get)"></script>
 
         </div>
     </div>

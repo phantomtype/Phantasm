@@ -1,9 +1,9 @@
-@(username: String)(implicit r: RequestHeader)
+@(username: Long)(implicit r: RequestHeader)
 
 $(function() {
 
     var WS = window['MozWebSocket'] ? MozWebSocket : WebSocket
-    var chatSocket = new WS("@routes.Application.chat(username).webSocketURL()")
+    var chatSocket = new WS("@routes.Application.chat(0, username).webSocketURL()")
 
     var sendMessage = function() {
         chatSocket.send(JSON.stringify(

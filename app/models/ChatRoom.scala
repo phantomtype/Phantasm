@@ -21,46 +21,32 @@ object ChatRoom {
 
   lazy val default = {
     val roomActor = Akka.system.actorOf(Props[ChatRoom])
-
     roomActor
   }
 
-  def join(username:String):scala.concurrent.Future[(Iteratee[JsValue,_],Enumerator[JsValue])] = {
+  def join(username:Long):scala.concurrent.Future[(Iteratee[JsValue,_],Enumerator[JsValue])] = {
 
     (default ? Join(username)).map {
 
       case Connected(enumerator) =>
-
-        // Create an Iteratee to consume the feed
         val iteratee = Iteratee.foreach[JsValue] { event =>
           default ! Talk(username, (event \ "text").as[String])
         }.map { _ =>
           default ! Quit(username)
         }
-
         (iteratee,enumerator)
 
       case CannotConnect(error) =>
-
-        // Connection error
-
-        // A finished Iteratee sending EOF
         val iteratee = Done[JsValue,Unit]((),Input.EOF)
-
-        // Send an error and close the socket
         val enumerator =  Enumerator[JsValue](JsObject(Seq("error" -> JsString(error)))).andThen(Enumerator.enumInput(Input.EOF))
-
         (iteratee,enumerator)
-
     }
-
   }
-
 }
 
 class ChatRoom extends Actor {
 
-  var members = Set.empty[String]
+  var members = Set.empty[Long]
   val (chatEnumerator, chatChannel) = Concurrent.broadcast[JsValue]
 
   def receive = {
@@ -90,14 +76,14 @@ class ChatRoom extends Actor {
 
   }
 
-  def notifyAll(kind: String, user: String, text: String) {
+  def notifyAll(kind: String, user: Long, text: String) {
     val msg = JsObject(
       Seq(
         "kind" -> JsString(kind),
-        "user" -> JsString(user),
+        "user" -> JsNumber(user),
         "message" -> JsString(text),
         "members" -> JsArray(
-          members.toList.map(JsString)
+          members.toList.map(JsNumber(_))
         )
       )
     )
@@ -106,10 +92,10 @@ class ChatRoom extends Actor {
 
 }
 
-case class Join(username: String)
-case class Quit(username: String)
-case class Talk(username: String, text: String)
-case class NotifyJoin(username: String)
+case class Join(username: Long)
+case class Quit(username: Long)
+case class Talk(username: Long, text: String)
+case class NotifyJoin(username: Long)
 
 case class Connected(enumerator:Enumerator[JsValue])
 case class CannotConnect(msg: String)
