@@ -38,7 +38,7 @@ object Application extends Controller with securesocial.core.SecureSocial {
     ChatRoom.join(userId)
   }
 
-  def chatRoomJs(username: Long) = Action { implicit request =>
-    Ok(views.js.chatRoom(username))
+  def chatRoomJs(userId: Long) = Action { implicit request =>
+    Ok(views.js.chatRoom(userId))
   }
 }

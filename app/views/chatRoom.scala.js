@@ -1,9 +1,9 @@
-@(username: Long)(implicit r: RequestHeader)
+@(userId: Long)(implicit r: RequestHeader)
 
 $(function() {
 
     var WS = window['MozWebSocket'] ? MozWebSocket : WebSocket
-    var chatSocket = new WS("@routes.Application.chat(0, username).webSocketURL()")
+    var chatSocket = new WS("@routes.Application.chat(0, userId).webSocketURL()")
 
     var sendMessage = function() {
         chatSocket.send(JSON.stringify(
@@ -30,7 +30,7 @@ $(function() {
         $("span", el).text(data.user)
         $("p", el).text(data.message)
         $(el).addClass(data.kind)
-        if(data.user == '@username') $(el).addClass('me')
+        if(data.user == '@userId') $(el).addClass('me')
         $('#messages').append(el)
 
         // Update the members list
