@@ -31,14 +31,14 @@ object Application extends Controller with securesocial.core.SecureSocial {
   }
 
   def room(id: Long) = SecuredAction { implicit rs =>
-    Ok(views.html.room())
+    Ok(views.html.room(id))
   }
 
   def chat(roomId: Long, userId: Long) = WebSocket.async[JsValue] { request  =>
     ChatRoom.join(userId)
   }
 
-  def chatRoomJs(userId: Long) = Action { implicit request =>
-    Ok(views.js.chatRoom(userId))
+  def chatRoomJs(roomId: Long, userId: Long) = Action { implicit request =>
+    Ok(views.js.chatRoom(roomId, userId))
   }
 }
