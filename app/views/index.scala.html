@@ -7,15 +7,11 @@
 @main("sockets") {
 
 @if(user.isDefined) {
-<div>
-    logged in by @user.get.fullName
-</div>
 } else {
 <div class="row">
     <div class="col-md-3">
         please <a href="/login">login</a>.
     </div>
 </div>
-
 }
 }

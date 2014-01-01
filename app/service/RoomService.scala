@@ -1,10 +1,11 @@
 package service
 
-import models.{Room, Users, RoomUser, User}
+import models._
 import play.api.db.slick.Config.driver.simple._
 import play.api.db.slick._
 import play.api.Play.current
 import org.joda.time.DateTime
+import scala.Some
 
 case class RoomService()
 
@@ -19,16 +20,22 @@ object RoomService {
     q.map(_._1).firstOption
   }
 
-  def createPrivateRoomUnlessExist(u: User) = {
+  def createPrivateRoomUnlessExist(u: User): Long = {
     DB.withSession { implicit session: Session =>
       findOwnedRoom(u) match {
-        case Some(room) => Unit
+        case Some(room) => room.id.get
         case None =>
           val room = Room(None, u.uid.get, "myroom", true, DateTime.now)
           val savedId = Room.autoinc.insert(room)
           val roomUser = RoomUser(None, u.uid.get, savedId, DateTime.now)
           RoomUser.autoinc.insert(roomUser)
       }
+    }
+  }
+
+  def createComment(comment: Comment) = {
+    DB.withSession { implicit session: Session =>
+      Comment.autoinc.insert(comment)
     }
   }
 }

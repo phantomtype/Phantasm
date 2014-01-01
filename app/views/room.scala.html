@@ -1,0 +1,32 @@
+@()(implicit flash: play.api.mvc.Flash, user:Option[securesocial.core.Identity])
+
+@import helper._
+@import controllers._
+@import securesocial.core.SecureSocial
+
+@main("sockets") {
+
+<div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div id="onChat" class="row">
+                <div class="span10" id="main">
+                    <div id="messages">
+                    </div>
+                    <textarea id="talk"></textarea>
+                </div>
+                <div class="span4">
+                    <h2>Members</h2>
+                    <ul id="members">
+                    </ul>
+                </div>
+            </div>
+
+            <script type="text/javascript" charset="utf-8" src="@routes.Application.chatRoomJs(user.get.fullName)"></script>
+
+        </div>
+    </div>
+
+</div>
+}

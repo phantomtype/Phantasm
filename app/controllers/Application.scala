@@ -1,9 +1,11 @@
 package controllers
 
-import play.api.mvc.{RequestHeader, Controller}
-import securesocial.core.{SecureSocial, Identity}
+import play.api.mvc.{Action, RequestHeader, Controller}
+import securesocial.core.{SecuredRequest, SecureSocial, Identity}
 import service.RoomService
-import models.{User, Users}
+import models.{ChatRoom, User, Users}
+import play.api.mvc.WebSocket
+import play.api.libs.json.JsValue
 
 object Application extends Controller with securesocial.core.SecureSocial {
 
@@ -18,12 +20,26 @@ object Application extends Controller with securesocial.core.SecureSocial {
     }
   }
 
+  def chatRoomJs(username: String) = Action { implicit request =>
+    Ok(views.js.chatRoom(username))
+  }
+
   def index = UserAwareAction { implicit rs =>
     user match {
-      case Some(u) => RoomService.createPrivateRoomUnlessExist(u)
-      case None => {}
+      case Some(u) =>
+        val id = RoomService.createPrivateRoomUnlessExist(u)
+        Redirect(routes.Application.room(id))
+      case None =>
+        Ok(views.html.index())
     }
-    Ok(views.html.index())
+  }
+
+  def room(id: Long) = SecuredAction { implicit rs =>
+    Ok(views.html.room())
+  }
+
+  def chat(roomId: Long, userId: Long) = WebSocket.async[JsValue] { request  =>
+    ChatRoom.join(roomId, userId)
   }
 
 }

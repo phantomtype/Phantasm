@@ -1,15 +1,11 @@
-# Routes
-# This file defines all application routes (Higher priority routes first)
-# ~~~~
-
 # Home page
-GET     /                           controllers.Application.index
-
-# Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
-
+GET  /                                controllers.Application.index
+GET  /room/:id                        controllers.Application.room(id: Long)
+GET  /room/:roomId/:userId            controllers.Application.chat(roomId: Long, userId: Long)
 
 
+GET  /assets/javascripts/chatroom.js  controllers.Application.chatRoomJs(username: String)
+GET  /assets/*file                    controllers.Assets.at(path="/public", file)
 
 # Login page
 GET     /login                      securesocial.controllers.LoginPage.login
