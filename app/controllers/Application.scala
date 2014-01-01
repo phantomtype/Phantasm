@@ -35,7 +35,7 @@ object Application extends Controller with securesocial.core.SecureSocial {
   }
 
   def chat(roomId: Long, userId: Long) = WebSocket.async[JsValue] { request  =>
-    ChatRoom.join(userId)
+    ChatRoom.join(roomId, userId)
   }
 
   def chatRoomJs(roomId: Long, userId: Long) = Action { implicit request =>
