@@ -1,0 +1,6 @@
+9994:securesocial.core.DefaultAuthenticatorStore
+9995:securesocial.core.DefaultIdGenerator
+9997:controllers.Login
+9998:service.UserService
+10001:securesocial.core.providers.FacebookProvider
+

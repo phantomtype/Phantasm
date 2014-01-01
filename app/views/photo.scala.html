@@ -1,0 +1,46 @@
+@(id: Long, photo: Photo, comments: List[(Comment, User)], commentForm: Form[CommentForm])(implicit flash: play.api.mvc.Flash, user:Option[securesocial.core.Identity])
+
+@import helper._
+@import controllers._
+
+@main(photo.title) {
+<h1>@photo.title</h1>
+<div class="row">
+    <div class="col-md-12">
+        <img class="large" src="@photo.url"/>
+    </div>
+</div>
+
+<div class="row">
+    @comments.map { comment =>
+    <div class="col-md-12">
+        <img class="avatar" src="@comment._2.avatarUrl" />
+        @comment._2.fullName
+        @comment._1.created.toString("yyyy//MM/dd HH:mm")
+        <p>@comment._1.comment</p>
+    </div>
+    }
+</div>
+
+@if(user.isDefined) {
+<div class="row">
+    <div class="col-md-12">
+        @form(routes.Application.comment(id)) {
+        <div class="form-group">
+        @textarea(commentForm("comment"), 'rows -> 3, 'cols -> 50)
+        <input type="hidden" name="photoId" value="@id">
+
+        <input type="submit" value="comment" class="btn primary">
+        </div>
+        }
+    </div>
+</div>
+} else {
+<div class="row">
+    <div class="col-md-12">
+    please <a href="/login">login</a> to upload picture.
+    </div>
+</div>
+}
+}
+
