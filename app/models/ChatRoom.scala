@@ -16,6 +16,8 @@ import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.iteratee.Concurrent.Channel
 import scala.collection.mutable
+import org.joda.time.DateTime
+import service.RoomService
 
 object ChatRoom {
 
@@ -74,6 +76,8 @@ class ChatRoom extends Actor {
     }
 
     case Talk(roomId, userId, text) => {
+      val comment = Comment(None, userId, roomId, text, DateTime.now)
+      RoomService.createComment(comment)
       notifyAll("talk", roomId, userId, text)
     }
 
