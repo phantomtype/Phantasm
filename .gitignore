@@ -19,3 +19,5 @@ public/node_modules
 bower_components
 public/js/*.js
 public/js/*.js.map
+public/components
+public/lib
