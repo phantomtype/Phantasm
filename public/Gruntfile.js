@@ -16,17 +16,18 @@ module.exports = function (grunt) {
     },
     typescript: {
       base: {
-        src: ['typescripts/*.ts'],
-        dest: 'javascripts/',
+        src: ['ts/*.ts'],
+        dest: 'js/',
         options: {
           module: 'amd', //or commonjs
           target: 'es5', //or es3
           sourcemap: true,
+          base_path: "ts"
         }
       }
     },
     watch: {
-      files: [ 'typescripts/*.ts' ],
+      files: [ 'ts/*.ts' ],
       tasks: [ 'compile' ]
     }
   });
