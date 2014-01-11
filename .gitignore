@@ -21,3 +21,4 @@ public/js/*.js
 public/js/*.js.map
 public/components
 public/lib
+public/css
