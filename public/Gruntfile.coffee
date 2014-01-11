@@ -25,8 +25,8 @@ module.exports = (grunt) ->
       files: [ 'ts/*.ts' ]
       tasks: [ 'compile' ]
 
-  grunt.loadNpmTasks('grunt-bower-task');
+  for taskName of pkg.devDependencies when taskName.substring(0, 6) is 'grunt-'
+    grunt.loadNpmTasks taskName
+
   grunt.registerTask('default', ['bower:install']);
-  grunt.loadNpmTasks('grunt-typescript');
   grunt.registerTask('compile', ['typescript']);
-  grunt.loadNpmTasks('grunt-contrib-watch');
