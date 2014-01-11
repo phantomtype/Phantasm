@@ -28,8 +28,9 @@ module.exports = (grunt) ->
           config: 'config.rb'
 
     watch:
-      files: [ 'ts/*.ts' ]
-      tasks: [ 'compile' ]
+      ts:
+        files: [ 'ts/*.ts' ]
+        tasks: [ 'compile' ]
 
       sass:
         files: [ 'sass/style.scss' ]
