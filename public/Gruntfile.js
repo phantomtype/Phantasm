@@ -35,4 +35,5 @@ module.exports = function (grunt) {
   grunt.registerTask('default', ['bower:install']);
   grunt.loadNpmTasks('grunt-typescript');
   grunt.registerTask('compile', ['typescript']);
+  grunt.loadNpmTasks('grunt-contrib-watch');
 };
