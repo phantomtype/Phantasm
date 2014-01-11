@@ -1,9 +1,4 @@
 
-path = require('path')
-lrSnippet = require('grunt-contrib-livereload/lib/utils').livereloadSnippet
-folderMount = (connect, point) ->
-  connect.static(path.resolve(point))
-
 module.exports = (grunt) ->
   pkg = grunt.file.readJSON("package.json")
   grunt.initConfig
@@ -40,15 +35,7 @@ module.exports = (grunt) ->
         files: [ 'sass/style.scss' ]
         tasks: [ 'compass', 'cmq', 'csscomb' ]
         options:
-          liveroad: true
           nospawn: true
-
-    connect:
-      liveload:
-        options:
-          port: 9000
-          middleware: (connect, options) ->
-            [lrSnippet, folderMount(connect, '.')]
 
     cmq:
       options:
