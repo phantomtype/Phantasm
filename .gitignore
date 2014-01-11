@@ -16,3 +16,4 @@ dist
 conf/evolutions/default
 securesocial.conf
 public/node_modules
+bower_components
