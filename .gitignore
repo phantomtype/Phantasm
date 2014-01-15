@@ -22,3 +22,4 @@ public/js/*.js.map
 public/components
 public/lib
 public/css
+public/.idea
