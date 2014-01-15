@@ -26,7 +26,7 @@ $(function() {
         }
 
         // Create the message element
-        var el = $('<div class="message"><span></span><p></p></div>')
+        var el = $('<div class="col-md-4"><span></span><p></p></div>')
         $("span", el).text(data.user)
         $("p", el).text(data.message)
         $(el).addClass(data.kind)
@@ -37,7 +37,7 @@ $(function() {
         $("#members").html('')
         $(data.members).each(function() {
             var li = document.createElement('li');
-            li.textContent = this;
+            li.textContent = this.name;
             $("#members").append(li);
         })
     }
