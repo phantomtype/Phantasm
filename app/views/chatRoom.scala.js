@@ -26,8 +26,12 @@ $(function() {
         }
 
         // Create the message element
-        var el = $('<div class="col-md-4"><span></span><p></p></div>')
-        $("span", el).text(data.user)
+        var el = $('<div class="col-md-4"><img /><span></span><p></p></div>')
+        var user = data.members.filter(function(member) {
+            return member.id == data.user
+        })[0];
+        $("img", el).attr("src", user.avatar)
+        $("span", el).text(user.name)
         $("p", el).text(data.message)
         $(el).addClass(data.kind)
         if(data.user == '@userId') $(el).addClass('me')
