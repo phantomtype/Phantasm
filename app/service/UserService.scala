@@ -13,10 +13,7 @@ class UserService(application: Application) extends UserServicePlugin(applicatio
   // Since we're not using username/password login, we don't need the methods below
   def findByEmailAndProvider(email: String, providerId: String) = None
   def save(token: Token) {}
-
   def findToken(token: String) = None
-
   def deleteToken(uuid: String) {}
-
   def deleteExpiredTokens() {}
 }
