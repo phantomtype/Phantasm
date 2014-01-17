@@ -3,9 +3,10 @@ package controllers
 import play.api.mvc.{Action, RequestHeader, Controller}
 import securesocial.core.{SecuredRequest, SecureSocial, Identity}
 import service.RoomService
-import models.{ChatRoom, User, Users}
+import models._
 import play.api.mvc.WebSocket
 import play.api.libs.json.JsValue
+import scala.Some
 
 object Application extends Controller with securesocial.core.SecureSocial {
 
@@ -29,9 +30,13 @@ object Application extends Controller with securesocial.core.SecureSocial {
         Ok(views.html.index())
     }
   }
-
   def room(id: Long) = SecuredAction { implicit rs =>
-    Ok(views.html.room(id))
+    val messages = Room.recent_messages(id).map { t =>
+      val user = t._2
+      val comment = t._1
+      Message(user.avatarUrl.getOrElse(""), user.fullName, comment.message)
+    }
+    Ok(views.html.room(id, messages))
   }
 
   def chat(roomId: Long, userId: Long) = WebSocket.async[JsValue] { request  =>

@@ -1,6 +1,9 @@
 package models
 
 import play.api.db.slick.Config.driver.simple._
+//import play.api.db.slick.DB
+import play.api.Play.current
+import play.api.db.slick._
 
 import org.joda.time.DateTime
 import com.github.tototoshi.slick.JodaSupport._
@@ -16,4 +19,20 @@ object Room extends Table[Room]("rooms") {
 
   def * = id.? ~ ownerId ~ name ~ isPrivate ~ created <> (Room.apply _, Room.unapply _)
   def autoinc = * returning id
+
+  def recent_messages(roomId: Long): Seq[(Comment, User)] = DB.withSession {
+    implicit session =>
+      val q = for {
+        (comment, user) <- Comment.sortBy(_.created.desc) leftJoin Users on (_.userId === _.uid)
+        if comment.roomId is roomId
+      } yield (comment, user)
+      q.take(10).list
+  }
 }
+
+case class Message (
+                     avatar: String,
+                     username: String,
+                     message: String
+                     )
+

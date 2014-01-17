@@ -1,4 +1,4 @@
-@(id: Long)(implicit flash: play.api.mvc.Flash, user:Option[models.User])
+@(id: Long, messages: Seq[Message])(implicit flash: play.api.mvc.Flash, user:Option[models.User])
 
 @import helper._
 @import controllers._
@@ -8,7 +8,15 @@
 
 <div id="onChat" class="row">
     <div class="col-md-8">
-        <div id="messages"></div>
+        <div id="messages">
+            @messages.map { msg =>
+                <div class="message">
+                    <img class="avatar" src="@msg.avatar" />
+                    <span>@msg.username</span>
+                    <p>@msg.message</p>
+                </div>
+            }
+        </div>
         <textarea id="talk" class="form-control" rows="3"></textarea>
     </div>
     <div class="col-md-3">
