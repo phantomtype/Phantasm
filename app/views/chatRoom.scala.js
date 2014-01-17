@@ -26,7 +26,7 @@ $(function() {
         }
 
         // Create the message element
-        var el = $('<div class="col-md-4"><img /><span></span><p></p></div>')
+        var el = $('<div class="message"><img class="avatar" /><span></span><p></p></div>')
         var user = data.members.filter(function(member) {
             return member.id == data.user
         })[0];
@@ -40,8 +40,9 @@ $(function() {
         // Update the members list
         $("#members").html('')
         $(data.members).each(function() {
-            var li = document.createElement('li');
-            li.textContent = this.name;
+            var li = $('<li><img class="avatar" /><span></span></li>');
+            $("img", li).attr("src", this.avatar)
+            $("span", li).text(this.name)
             $("#members").append(li);
         })
     }
