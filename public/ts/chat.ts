@@ -2,14 +2,17 @@
 
 var chat_start = (chatSocket: WebSocket, userId: number) => {
 
-    var sendMessage = () => {
-        chatSocket.send(JSON.stringify(
-            {text: $("#talk").val()}
-        ))
-        $("#talk").val('')
-    }
+    $("#talk").keypress((e) => {
+        if(e.charCode == 13 || e.keyCode == 13) {
+            e.preventDefault()
+            chatSocket.send(JSON.stringify(
+                {text: $("#talk").val()}
+            ))
+            $("#talk").val('')
+        }
+    })
 
-    var receiveEvent = (event) => {
+    chatSocket.onmessage = (event) => {
         var data = JSON.parse(event.data)
 
         // Handle errors
@@ -43,16 +46,5 @@ var chat_start = (chatSocket: WebSocket, userId: number) => {
             $("#members").append(li);
         })
     }
-
-    var handleReturnKey = (e) => {
-        if(e.charCode == 13 || e.keyCode == 13) {
-            e.preventDefault()
-            sendMessage()
-        }
-    }
-
-    $("#talk").keypress(handleReturnKey)
-
-    chatSocket.onmessage = receiveEvent
 
 }
