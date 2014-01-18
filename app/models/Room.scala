@@ -23,10 +23,10 @@ object Room extends Table[Room]("rooms") {
   def recent_messages(roomId: Long): Seq[(Comment, User)] = DB.withSession {
     implicit session =>
       val q = for {
-        (comment, user) <- Comment.sortBy(_.created.desc) leftJoin Users on (_.userId === _.uid)
+        (comment, user) <- Comment leftJoin Users on (_.userId === _.uid)
         if comment.roomId is roomId
       } yield (comment, user)
-      q.take(10).list
+      q.sortBy(_._1.created).take(10).list
   }
 }
 
