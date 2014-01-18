@@ -26,7 +26,7 @@ object Room extends Table[Room]("rooms") {
         (comment, user) <- Comment leftJoin Users on (_.userId === _.uid)
         if comment.roomId is roomId
       } yield (comment, user)
-      q.sortBy(_._1.created).take(10).list
+      q.sortBy(_._1.created.desc).take(10).list
   }
 }
 
