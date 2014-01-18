@@ -22,6 +22,11 @@ module.exports = (grunt) ->
           sourcemap: true
           base_path: "ts"
 
+    exec:
+      tsd:
+        cmd: ->
+          "tsd install jquery angular angular-resource angular-route"
+
     compass:
       dist:
         options:
