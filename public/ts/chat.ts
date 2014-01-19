@@ -1,4 +1,5 @@
 /// <reference path="../d.ts/DefinitelyTyped/jquery/jquery.d.ts" />
+/// <reference path="../d.ts/chat.d.ts" />
 
 var chat_start = (chatSocket: WebSocket, userId: number) => {
 
@@ -13,7 +14,7 @@ var chat_start = (chatSocket: WebSocket, userId: number) => {
     })
 
     chatSocket.onmessage = (event) => {
-        var data = JSON.parse(event.data)
+        var data: Message = JSON.parse(event.data)
 
         // Handle errors
         if(data.error) {
@@ -27,7 +28,7 @@ var chat_start = (chatSocket: WebSocket, userId: number) => {
 
         // Create the message element
         var el = $('<div class="message"><img class="avatar" /><span></span><p></p></div>')
-        var user = data.members.filter((member) => {
+        var user = data.members.filter((member: Member) => {
             return member.id == data.user
         })[0];
         $("img", el).attr("src", user.avatar)
@@ -39,7 +40,7 @@ var chat_start = (chatSocket: WebSocket, userId: number) => {
 
         // Update the members list
         $("#members").html('')
-        data.members.forEach((member) => {
+        data.members.forEach((member: Member) => {
             var li = $('<li><img class="avatar" /><span></span></li>');
             $("img", li).attr("src", member.avatar)
             $("span", li).text(member.name)
