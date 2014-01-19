@@ -1,4 +1,5 @@
 /// <reference path="../d.ts/DefinitelyTyped/jquery/jquery.d.ts" />
+/// <reference path="../d.ts/DefinitelyTyped/angularjs/angular.d.ts" />
 /// <reference path="../d.ts/chat.d.ts" />
 
 var chat_start = (chatSocket: WebSocket, userId: number) => {
@@ -48,4 +49,21 @@ var chat_start = (chatSocket: WebSocket, userId: number) => {
         })
     }
 
+}
+
+module Chat {
+    export interface Scope extends ng.IScope {
+        roomId: number
+        messages: Array<any>
+    }
+    export class Controller {
+        constructor($scope: Scope, $http: ng.IHttpService) {
+            $scope.messages = []
+            $http.get("/recently_messages/" + $scope.roomId ).success((result) => {
+                result.reverse().forEach((message) =>{
+                    $scope.messages.push(message)
+                })
+            })
+        }
+    }
 }

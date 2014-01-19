@@ -5,8 +5,9 @@ import securesocial.core.{SecuredRequest, SecureSocial, Identity}
 import service.RoomService
 import models._
 import play.api.mvc.WebSocket
-import play.api.libs.json.JsValue
 import scala.Some
+import play.api.libs.json.{JsValue, Writes, Json}
+
 
 object Application extends Controller with securesocial.core.SecureSocial {
 
@@ -30,13 +31,9 @@ object Application extends Controller with securesocial.core.SecureSocial {
         Ok(views.html.index())
     }
   }
+
   def room(id: Long) = SecuredAction { implicit rs =>
-    val messages = Room.recent_messages(id).map { t =>
-      val user = t._2
-      val comment = t._1
-      Message(user.avatarUrl.getOrElse(""), user.fullName, comment.message)
-    }
-    Ok(views.html.room(id, messages))
+    Ok(views.html.room(id))
   }
 
   def chat(roomId: Long, userId: Long) = WebSocket.async[JsValue] { request  =>
@@ -45,5 +42,25 @@ object Application extends Controller with securesocial.core.SecureSocial {
 
   def chatRoomJs(roomId: Long, userId: Long) = Action { implicit request =>
     Ok(views.js.chatRoom(roomId, userId))
+  }
+
+  implicit val implicitMessageFileWrites = new Writes[Message] {
+    def writes(message: Message): JsValue = {
+      Json.obj(
+        "avatar"   -> message.avatar,
+        "username" -> message.username,
+        "message"  -> message.message
+      )
+    }
+  }
+
+
+  def recentlyMessage(roomId: Long) = SecuredAction { implicit request =>
+    val messages = Room.recent_messages(roomId).map { t =>
+      val user = t._2
+      val comment = t._1
+      Message(user.avatarUrl.getOrElse(""), user.fullName, comment.message)
+    }
+    Ok(Json.toJson(messages))
   }
 }
