@@ -9,13 +9,10 @@
 <div ng-init="roomId = @id; userId = @user.get.uid.get">
     <div id="onChat" class="row" ng-controller="Chat.Controller">
         <div class="col-md-8">
-            <div id="messages">
-                <div class="message" ng-repeat="msg in messages">
-                    <img class="avatar" src="{{msg.avatar}}"/>
-                    <span>{{msg.username}}</span>
-
-                    <p>{{msg.message}}</p>
-                </div>
+            <div class="message" ng-repeat="msg in messages">
+                <img class="avatar" src="{{msg.avatar}}"/>
+                <span>{{msg.username}}</span>
+                <p>{{msg.message}}</p>
             </div>
             <textarea ng-keypress="talk($event)" ng-model="talkBody" class="form-control" rows="3"></textarea>
         </div>

@@ -40,24 +40,14 @@ module Chat {
                     // Handle errors
                     if (data.error) {
                         chatSocket.close()
-                        $("#onError span").text(data.error)
-                        $("#onError").show()
+                        console.log(data.error)
                         return
                     } else {
                         $("#onChat").show()
                     }
 
-                    // Create the message element
-                    var el = $('<div class="message"><img class="avatar" /><span></span><p></p></div>')
-                    var user = data.members.filter((member:Member) => {
-                        return member.id == data.user
-                    })[0];
-                    $("img", el).attr("src", user.avatar)
-                    $("span", el).text(user.name)
-                    $("p", el).text(data.message)
-                    $(el).addClass(data.kind)
-                    if (data.user == $scope.userId) $(el).addClass('me')
-                    $('#messages').append(el)
+                    $scope.messages.push(data)
+                    $scope.$digest()
 
                     // Update the members list
                     $("#members").html('')
