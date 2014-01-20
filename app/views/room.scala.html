@@ -18,7 +18,8 @@
         </div>
         <div class="col-md-3">
             <h2>Members</h2>
-            <ul id="members">
+            <ul>
+                <li ng-repeat="member in members"><img class="avatar" src="{{member.avatar}}" /><span>{{member.name}}</span></li>
             </ul>
         </div>
     </div>

@@ -10,7 +10,9 @@ module Chat {
         messages: Array<any>
         talkBody: String
         talk: (KeyboardEvent) => void
+        members: Array<any>
     }
+
     export class Controller {
         constructor($scope:Scope, $http:ng.IHttpService) {
             $scope.messages = []
@@ -47,16 +49,13 @@ module Chat {
                     }
 
                     $scope.messages.push(data)
-                    $scope.$digest()
 
-                    // Update the members list
-                    $("#members").html('')
+                    $scope.members = []
                     data.members.forEach((member:Member) => {
-                        var li = $('<li><img class="avatar" /><span></span></li>');
-                        $("img", li).attr("src", member.avatar)
-                        $("span", li).text(member.name)
-                        $("#members").append(li);
+                        $scope.members.push(member)
                     })
+
+                    $scope.$digest()
                 }
             })
         }
