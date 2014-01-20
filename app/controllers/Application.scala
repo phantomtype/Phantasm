@@ -40,8 +40,8 @@ object Application extends Controller with securesocial.core.SecureSocial {
     ChatRoom.join(roomId, userId)
   }
 
-  def chatRoomJs(roomId: Long, userId: Long) = Action { implicit request =>
-    Ok(views.js.chatRoom(roomId, userId))
+  def pathToRoom(roomId: Long, userId: Long) = SecuredAction { implicit rs =>
+    Ok(Json.toJson(Json.obj("path" -> routes.Application.chat(roomId, userId).webSocketURL())))
   }
 
   implicit val implicitMessageFileWrites = new Writes[Message] {
