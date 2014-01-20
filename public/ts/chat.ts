@@ -8,6 +8,8 @@ module Chat {
         roomId: number
         userId: number
         messages: Array<any>
+        talkBody: String
+        talk: (KeyboardEvent) => void
     }
     export class Controller {
         constructor($scope:Scope, $http:ng.IHttpService) {
@@ -22,15 +24,15 @@ module Chat {
                 var WS = window['MozWebSocket'] ? MozWebSocket : WebSocket
                 var chatSocket = new WS(result.path)
 
-                $("#talk").keypress((e) => {
+                $scope.talk = (e:KeyboardEvent) => {
                     if (e.charCode == 13 || e.keyCode == 13) {
                         e.preventDefault()
                         chatSocket.send(JSON.stringify(
-                            {text: $("#talk").val()}
+                            {text: $scope.talkBody}
                         ))
-                        $("#talk").val('')
+                        $scope.talkBody = ""
                     }
-                })
+                }
 
                 chatSocket.onmessage = (event) => {
                     var data:Message = JSON.parse(event.data)

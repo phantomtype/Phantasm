@@ -17,7 +17,7 @@
                     <p>{{msg.message}}</p>
                 </div>
             </div>
-            <textarea id="talk" class="form-control" rows="3"></textarea>
+            <textarea ng-keypress="talk($event)" ng-model="talkBody" class="form-control" rows="3"></textarea>
         </div>
         <div class="col-md-3">
             <h2>Members</h2>
