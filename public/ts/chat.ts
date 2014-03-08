@@ -7,7 +7,7 @@ module Chat {
     export interface Scope extends ng.IScope {
         roomId: number
         userId: number
-        messages: Array<any>
+        messages: Array<Message>
         talkBody: String
         talk: (KeyboardEvent) => void
         members: Array<any>
@@ -17,7 +17,7 @@ module Chat {
         constructor($scope:Scope, $http:ng.IHttpService) {
             $scope.messages = []
             $http.get("/recently_messages/" + $scope.roomId).success((result) => {
-                result.reverse().forEach((message) => {
+                result.reverse().forEach((message: Message) => {
                     $scope.messages.push(message)
                 })
             })

@@ -44,22 +44,36 @@ object Application extends Controller with securesocial.core.SecureSocial {
     Ok(Json.toJson(Json.obj("path" -> routes.Application.chat(roomId, userId).webSocketURL())))
   }
 
-  implicit val implicitMessageFileWrites = new Writes[Message] {
-    def writes(message: Message): JsValue = {
+  implicit val implicitUserWrites = new Writes[User] {
+    def writes(user: User): JsValue = {
       Json.obj(
-        "avatar"   -> message.avatar,
-        "username" -> message.username,
-        "message"  -> message.message
+        "name" -> user.fullName,
+        "avatar"   -> user.avatarUrl
       )
     }
   }
 
+  implicit val implicitCommentWrites = new Writes[Comment] {
+    def writes(comment: Comment): JsValue = {
+      Json.obj(
+        "message" -> comment.message,
+        "created" -> comment.created
+      )
+    }
+  }
+
+  implicit val implicitMessageWrites = new Writes[Message] {
+    def writes(message: Message): JsValue = {
+      Json.obj(
+        "user"     -> message.user,
+        "comment"  -> message.comment
+      )
+    }
+  }
 
   def recentlyMessage(roomId: Long) = SecuredAction { implicit request =>
     val messages = Room.recent_messages(roomId).map { t =>
-      val user = t._2
-      val comment = t._1
-      Message(user.avatarUrl.getOrElse(""), user.fullName, comment.message)
+      Message(t._2, t._1)
     }
     Ok(Json.toJson(messages))
   }

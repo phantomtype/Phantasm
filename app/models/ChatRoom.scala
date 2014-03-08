@@ -96,18 +96,17 @@ class ChatRoom extends Actor {
       Seq(
         "kind"    -> JsString(kind),
         "roomId"  -> JsNumber(roomId),
-        "user"    -> JsNumber(userId),
-        "username"-> JsString(user.fullName),
-        "avatar"  -> JsString(user.avatarUrl.get),
+        "user"    -> JsObject(Seq(
+            "name"   -> JsString(user.fullName),
+            "avatar" -> JsString(user.avatarUrl.get)
+        )),
         "message" -> JsString(text),
         "members" -> JsArray(
-          ms.map(member => JsObject(
-            Seq(
+          ms.map(member => JsObject(Seq(
               "id"     -> JsNumber(member.uid.get),
               "name"   -> JsString(member.fullName),
               "avatar" -> JsString(member.avatarUrl.getOrElse(""))
-            )
-          ))
+          )))
         )
       )
     )

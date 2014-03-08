@@ -10,16 +10,19 @@
     <div id="onChat" class="row" ng-controller="Chat.Controller">
         <div class="col-md-8">
             <div class="message" ng-repeat="msg in messages">
-                <img class="avatar" src="{{msg.avatar}}"/>
-                <span>{{msg.username}}</span>
-                <p>{{msg.message}}</p>
+                <img class="avatar" src="{{msg.user.avatar}}"/>
+                <span>{{msg.user.name}}</span>
+                <p>{{msg.comment.message}}</p>
             </div>
             <textarea ng-keypress="talk($event)" ng-model="talkBody" class="form-control" rows="3"></textarea>
         </div>
         <div class="col-md-3">
             <h2>Members</h2>
             <ul>
-                <li ng-repeat="member in members"><img class="avatar" src="{{member.avatar}}" /><span>{{member.name}}</span></li>
+                <li ng-repeat="member in members">
+                    <img class="avatar" src="{{member.avatar}}" />
+                    <span>{{member.name}}</span>
+                </li>
             </ul>
         </div>
     </div>

@@ -2,7 +2,7 @@
 interface Message {
     members: Array<Member>
     error:   string
-    user:    number
+    user:    Member
     message: string
     kind:    string
 }
