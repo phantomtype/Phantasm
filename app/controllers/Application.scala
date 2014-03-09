@@ -17,7 +17,7 @@ object Application extends Controller with securesocial.core.SecureSocial {
 
   implicit def user(implicit  request: RequestHeader): Option[User] = {
     identity match {
-      case Some(i) => Users.findByUserId(i.identityId)
+      case Some(i) => Tables.Users.findByIdentityId(i.identityId)
       case None => None
     }
   }
@@ -28,8 +28,8 @@ object Application extends Controller with securesocial.core.SecureSocial {
         val id = RoomService.createPrivateRoomUnlessExist(u)
         Redirect(routes.Application.room(id))
       case None =>
-        Ok(views.html.index())
-    }
+    Ok(views.html.index())
+  }
   }
 
   def room(id: Long) = SecuredAction { implicit rs =>
@@ -72,7 +72,7 @@ object Application extends Controller with securesocial.core.SecureSocial {
   }
 
   def recentlyMessage(roomId: Long) = SecuredAction { implicit request =>
-    val messages = Room.recent_messages(roomId).map { t =>
+    val messages = Rooms.recent_messages(roomId).map { t =>
       Message(t._2, t._1)
     }
     Ok(Json.toJson(messages))
