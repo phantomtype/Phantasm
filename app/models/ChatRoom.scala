@@ -90,16 +90,24 @@ class ChatRoom extends Actor {
 
   def notifyAll(kind: String, roomId: Long, userId: Long, text: String) {
     val ms = members.toList.map(id => Tables.Users.findById(id).get)
-    val user = ms.find(_.uid.exists(_ == userId)).get
+    val user = ms.find(_.uid.exists(_ == userId))
+
+    val u = user match {
+      case Some(user) => Seq(
+        "name"   -> JsString(user.fullName),
+        "avatar" -> JsString(user.avatarUrl.get)
+      )
+      case None => Seq(
+        "name"   -> JsString(""),
+        "avatar" -> JsString("")
+      )
+    }
 
     val msg = JsObject(
       Seq(
         "kind"    -> JsString(kind),
         "roomId"  -> JsNumber(roomId),
-        "user"    -> JsObject(Seq(
-            "name"   -> JsString(user.fullName),
-            "avatar" -> JsString(user.avatarUrl.get)
-        )),
+        "user"    -> JsObject(u),
         "message" -> JsString(text),
         "members" -> JsArray(
           ms.map(member => JsObject(Seq(
