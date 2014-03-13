@@ -12,7 +12,7 @@
             <div class="message" ng-repeat="msg in messages">
                 <img class="avatar" src="{{msg.user.avatar}}"/>
                 <span>{{msg.user.name}}</span>
-                <p>{{msg.comment.message}}</p>
+                <p>{{msg.message}}</p>
             </div>
             <textarea ng-keypress="talk($event)" ng-model="talkBody" class="form-control" rows="3"></textarea>
         </div>

@@ -66,7 +66,7 @@ object Application extends Controller with securesocial.core.SecureSocial {
     def writes(message: Message): JsValue = {
       Json.obj(
         "user"     -> message.user,
-        "comment"  -> message.comment
+        "message"  -> message.comment.message
       )
     }
   }
