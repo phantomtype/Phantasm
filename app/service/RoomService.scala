@@ -10,15 +10,10 @@ import scala.Some
 case class RoomService()
 
 object RoomService {
-  val rooms = TableQuery[Rooms]
-  val roomUsers = TableQuery[RoomUsers]
-  val users = TableQuery[Users]
-  val comments = TableQuery[Comments]
-
   def findOwnedRoom(u: User)(implicit s:Session): Option[Room] = {
     val q = for {
-      (room, roomUser) <- rooms leftJoin roomUsers on (_.id === _.roomId)
-      (roomUser, user) <- roomUsers leftJoin users on (_.userId === _.uid)
+      (room, roomUser) <- Tables.Rooms leftJoin Tables.RoomUsers on (_.id === _.roomId)
+      (roomUser, user) <- Tables.RoomUsers leftJoin Tables.Users on (_.userId === _.uid)
       if roomUser.userId is u.uid
     } yield (room, roomUser, user)
 
@@ -31,16 +26,25 @@ object RoomService {
         case Some(room) => room.id.get
         case None =>
           val room = Room(None, u.uid.get, "myroom", true, DateTime.now)
-          val savedId = rooms.insert(room)
+          val savedId = Tables.Rooms.insert(room)
           val roomUser = RoomUser(None, u.uid.get, savedId, DateTime.now)
-          roomUsers.insert(roomUser)
+          Tables.RoomUsers.insert(roomUser)
       }
     }
   }
 
+  def recent_messages(roomId: Long): Seq[(Comment, User)] = DB.withSession {
+    implicit session =>
+      val q = for {
+        comment <- Tables.Comments if comment.roomId is roomId
+        user <- Tables.Users if comment.userId === user.uid
+      } yield (comment, user)
+      q.sortBy(_._1.created.desc).take(10).list
+  }
+
   def createComment(comment: Comment) = {
     DB.withSession { implicit session =>
-      comments.insert(comment)
+      Tables.Comments.insert(comment)
     }
   }
 }

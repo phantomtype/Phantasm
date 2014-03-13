@@ -72,7 +72,7 @@ object Application extends Controller with securesocial.core.SecureSocial {
   }
 
   def recentlyMessage(roomId: Long) = SecuredAction { implicit request =>
-    val messages = Rooms.recent_messages(roomId).map { t =>
+    val messages = RoomService.recent_messages(roomId).map { t =>
       Message(t._2, t._1)
     }
     Ok(Json.toJson(messages))

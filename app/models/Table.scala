@@ -181,6 +181,39 @@ class Tokens(tag: Tag) extends Table[Token](tag, "token") {
   }
 }
 
+case class Room(id: Option[Long], ownerId: Long, name: String, isPrivate: Boolean, created: DateTime)
+class Rooms(tag: Tag) extends Table[Room](tag, "rooms") {
+  def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+  def ownerId = column[Long]("ownerId", O.NotNull)
+  def name = column[String]("name", O.NotNull)
+  def isPrivate = column[Boolean]("private", O.NotNull)
+  def created = column[DateTime]("created", O.NotNull)
+
+  def * = (id.?, ownerId, name, isPrivate, created) <> (Room.tupled, Room.unapply)
+}
+case class Message(user: User, comment: Comment)
+
+
+case class Comment(id: Option[Long], userId: Long, roomId: Long, message: String, created: DateTime)
+class Comments(tag: Tag) extends Table[Comment](tag, "comments") {
+  def id      = column[Long]("id", O.PrimaryKey, O.AutoInc)
+  def userId  = column[Long]("userId", O.NotNull)
+  def roomId  = column[Long]("roomId", O.NotNull)
+  def message = column[String]("comment", O.NotNull)
+  def created = column[DateTime]("created", O.NotNull)
+
+  def * = (id.?, userId, roomId, message, created) <> (Comment.tupled, Comment.unapply)
+}
+
+case class RoomUser(id: Option[Long], userId: Long, roomId: Long, created: DateTime)
+class RoomUsers(tag: Tag) extends Table[RoomUser](tag, "room_users") {
+  def id      = column[Long]("id", O.PrimaryKey, O.AutoInc)
+  def userId  = column[Long]("userId", O.NotNull)
+  def roomId  = column[Long]("roomId", O.NotNull)
+  def created = column[DateTime]("created", O.NotNull)
+
+  def * = (id.?, userId, roomId, created) <> (RoomUser.tupled, RoomUser.unapply)
+}
 
 trait WithDefaultSession {
 
@@ -324,4 +357,10 @@ object Tables extends WithDefaultSession {
     }
 
   }
+
+  val Rooms = TableQuery[Rooms](new Rooms(_))
+
+  val RoomUsers = TableQuery[RoomUsers](new RoomUsers(_))
+
+  val Comments = TableQuery[Comments](new Comments(_))
 }
