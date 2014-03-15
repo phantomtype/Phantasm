@@ -57,14 +57,14 @@ case class RobotComment(message: String) {
 class ChatRoom extends Actor {
   implicit def StringToComment(message: String): Comment = Comment(None, 0, 0, message, DateTime.now)
 
-  var members = Set.empty[Long]
+  var member_ids = Set.empty[Long]
   val enumerators = new mutable.HashMap[Long, Enumerator[JsValue]]
   val channels = new mutable.HashMap[Long, Channel[JsValue]]
 
   def receive = {
 
     case Join(roomId, userId) => {
-        members = members + userId
+        member_ids = member_ids + userId
         val enumerator = enumerators.get(roomId) match {
           case Some(e) => e
           case None => {
@@ -89,15 +89,15 @@ class ChatRoom extends Actor {
     }
 
     case Quit(roomId, userId) => {
-      members = members - userId
+      member_ids = member_ids - userId
       notifyAll("quit", roomId, userId, "has left the room")
     }
 
   }
 
   def notifyAll(kind: String, roomId: Long, userId: Long, comment: Comment) {
-    val ms = members.toList.map(id => Tables.Users.findById(id).get)
-    val user = ms.find(_.uid.exists(_ == userId))
+    val members = member_ids.toList.map(id => Tables.Users.findById(id).get)
+    val user = members.find(_.uid.exists(_ == userId))
 
     val msg = JsObject(
       Seq(
@@ -105,7 +105,7 @@ class ChatRoom extends Actor {
         "roomId"  -> JsNumber(roomId),
         "user"    -> Json.toJson(user),
         "comment" -> Json.toJson(comment),
-        "members" -> JsArray(ms.map(Json.toJson(_)))
+        "members" -> JsArray(members.map(Json.toJson(_)))
       )
     )
     channels.get(roomId) match {
