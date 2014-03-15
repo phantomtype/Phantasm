@@ -33,7 +33,7 @@ object RoomService {
     }
   }
 
-  def recent_messages(roomId: Long): Seq[(Comment, User)] = DB.withSession {
+  def recent_comments(roomId: Long): Seq[(Comment, User)] = DB.withSession {
     implicit session =>
       val q = for {
         comment <- Tables.Comments if comment.roomId is roomId
@@ -42,9 +42,10 @@ object RoomService {
       q.sortBy(_._1.created.desc).take(10).list
   }
 
-  def createComment(comment: Comment) = {
+  def createComment(comment: Comment): Comment = {
     DB.withSession { implicit session =>
       Tables.Comments.insert(comment)
+      comment
     }
   }
 }

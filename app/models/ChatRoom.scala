@@ -48,7 +48,13 @@ object ChatRoom {
   }
 }
 
+case class RobotComment(message: String) {
+  def apply(message: String): Comment =
+    Comment(None, 0, 0, message, DateTime.now)
+}
+
 class ChatRoom extends Actor {
+  implicit def StringToComment(message: String): Comment = Comment(None, 0, 0, message, DateTime.now)
 
   var members = Set.empty[Long]
   val enumerators = new mutable.HashMap[Long, Enumerator[JsValue]]
@@ -78,7 +84,7 @@ class ChatRoom extends Actor {
     case Talk(roomId, userId, text) => {
       val comment = Comment(None, userId, roomId, text, DateTime.now)
       RoomService.createComment(comment)
-      notifyAll("talk", roomId, userId, text)
+      notifyAll("talk", roomId, userId, comment)
     }
 
     case Quit(roomId, userId) => {
@@ -88,7 +94,7 @@ class ChatRoom extends Actor {
 
   }
 
-  def notifyAll(kind: String, roomId: Long, userId: Long, text: String) {
+  def notifyAll(kind: String, roomId: Long, userId: Long, comment: Comment) {
     val ms = members.toList.map(id => Tables.Users.findById(id).get)
     val user = ms.find(_.uid.exists(_ == userId))
 
@@ -108,7 +114,10 @@ class ChatRoom extends Actor {
         "kind"    -> JsString(kind),
         "roomId"  -> JsNumber(roomId),
         "user"    -> JsObject(u),
-        "message" -> JsString(text),
+        "comment" -> JsObject(Seq(
+          "message" -> JsString(comment.message),
+          "created" -> JsString(comment.created.toString())
+        )),
         "members" -> JsArray(
           ms.map(member => JsObject(Seq(
               "id"     -> JsNumber(member.uid.get),
