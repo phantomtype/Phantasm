@@ -2,6 +2,8 @@ package models
 
 import play.api.libs.json.{Json, JsValue, Writes}
 
+case class Message(kind: String, roomId: Long, user: User, comment: Comment, members: List[User])
+
 object JsonWrites {
 
   implicit val implicitUserWrites = new Writes[User] {
@@ -26,8 +28,11 @@ object JsonWrites {
   implicit val implicitMessageWrites = new Writes[Message] {
     def writes(message: Message): JsValue = {
       Json.obj(
+        "kind"     -> message.kind,
+        "roomId"   -> message.roomId,
         "user"     -> message.user,
-        "comment"  -> message.comment
+        "comment"  -> message.comment,
+        "members"  -> message.members
       )
     }
   }

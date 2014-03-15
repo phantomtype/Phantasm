@@ -191,7 +191,6 @@ class Rooms(tag: Tag) extends Table[Room](tag, "rooms") {
 
   def * = (id.?, ownerId, name, isPrivate, created) <> (Room.tupled, Room.unapply)
 }
-case class Message(user: User, comment: Comment)
 
 
 case class Comment(id: Option[Long], userId: Long, roomId: Long, message: String, created: DateTime)

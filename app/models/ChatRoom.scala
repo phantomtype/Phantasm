@@ -97,19 +97,11 @@ class ChatRoom extends Actor {
 
   def notifyAll(kind: String, roomId: Long, userId: Long, comment: Comment) {
     val members = member_ids.toList.map(id => Tables.Users.findById(id).get)
-    val user = members.find(_.uid.exists(_ == userId))
+    val user = Tables.Users.findById(userId)
+    val msg = Message(kind, roomId, user.get, comment, members)
 
-    val msg = JsObject(
-      Seq(
-        "kind"    -> JsString(kind),
-        "roomId"  -> JsNumber(roomId),
-        "user"    -> Json.toJson(user),
-        "comment" -> Json.toJson(comment),
-        "members" -> JsArray(members.map(Json.toJson(_)))
-      )
-    )
     channels.get(roomId) match {
-      case Some(channel) => channel.push(msg)
+      case Some(channel) => channel.push(Json.toJson(msg))
       case None => Unit
     }
   }
