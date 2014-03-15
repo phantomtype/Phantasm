@@ -18,6 +18,7 @@ import play.api.libs.iteratee.Concurrent.Channel
 import scala.collection.mutable
 import org.joda.time.DateTime
 import service.RoomService
+import models.JsonWrites._
 
 object ChatRoom {
 
@@ -98,33 +99,13 @@ class ChatRoom extends Actor {
     val ms = members.toList.map(id => Tables.Users.findById(id).get)
     val user = ms.find(_.uid.exists(_ == userId))
 
-    val u = user match {
-      case Some(user) => Seq(
-        "name"   -> JsString(user.fullName),
-        "avatar" -> JsString(user.avatarUrl.get)
-      )
-      case None => Seq(
-        "name"   -> JsString(""),
-        "avatar" -> JsString("")
-      )
-    }
-
     val msg = JsObject(
       Seq(
         "kind"    -> JsString(kind),
         "roomId"  -> JsNumber(roomId),
-        "user"    -> JsObject(u),
-        "comment" -> JsObject(Seq(
-          "message" -> JsString(comment.message),
-          "created" -> JsString(comment.created.toString())
-        )),
-        "members" -> JsArray(
-          ms.map(member => JsObject(Seq(
-              "id"     -> JsNumber(member.uid.get),
-              "name"   -> JsString(member.fullName),
-              "avatar" -> JsString(member.avatarUrl.getOrElse(""))
-          )))
-        )
+        "user"    -> Json.toJson(user),
+        "comment" -> Json.toJson(comment),
+        "members" -> JsArray(ms.map(Json.toJson(_)))
       )
     )
     channels.get(roomId) match {

@@ -7,7 +7,7 @@ import models._
 import play.api.mvc.WebSocket
 import scala.Some
 import play.api.libs.json.{JsValue, Writes, Json}
-
+import models.JsonWrites._
 
 object Application extends Controller with securesocial.core.SecureSocial {
 
@@ -42,33 +42,6 @@ object Application extends Controller with securesocial.core.SecureSocial {
 
   def pathToRoom(roomId: Long, userId: Long) = SecuredAction { implicit rs =>
     Ok(Json.toJson(Json.obj("path" -> routes.Application.chat(roomId, userId).webSocketURL())))
-  }
-
-  implicit val implicitUserWrites = new Writes[User] {
-    def writes(user: User): JsValue = {
-      Json.obj(
-        "name" -> user.fullName,
-        "avatar"   -> user.avatarUrl
-      )
-    }
-  }
-
-  implicit val implicitCommentWrites = new Writes[Comment] {
-    def writes(comment: Comment): JsValue = {
-      Json.obj(
-        "message" -> comment.message,
-        "created" -> comment.created
-      )
-    }
-  }
-
-  implicit val implicitMessageWrites = new Writes[Message] {
-    def writes(message: Message): JsValue = {
-      Json.obj(
-        "user"     -> message.user,
-        "comment"  -> message.comment
-      )
-    }
   }
 
   def recentlyMessage(roomId: Long) = SecuredAction { implicit request =>
