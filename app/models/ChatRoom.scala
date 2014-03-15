@@ -49,22 +49,17 @@ object ChatRoom {
   }
 }
 
-case class RobotComment(message: String) {
-  def apply(message: String): Comment =
-    Comment(None, 0, 0, message, DateTime.now)
-}
-
 class ChatRoom extends Actor {
   implicit def StringToComment(message: String): Comment = Comment(None, 0, 0, message, DateTime.now)
 
-  var member_ids = Set.empty[Long]
+  var members = Set.empty[User]
   val enumerators = new mutable.HashMap[Long, Enumerator[JsValue]]
   val channels = new mutable.HashMap[Long, Channel[JsValue]]
 
   def receive = {
 
     case Join(roomId, userId) => {
-        member_ids = member_ids + userId
+        members = members + Tables.Users.findById(userId).get
         val enumerator = enumerators.get(roomId) match {
           case Some(e) => e
           case None => {
@@ -89,16 +84,15 @@ class ChatRoom extends Actor {
     }
 
     case Quit(roomId, userId) => {
-      member_ids = member_ids - userId
+      members = members - Tables.Users.findById(userId).get
       notifyAll("quit", roomId, userId, "has left the room")
     }
 
   }
 
   def notifyAll(kind: String, roomId: Long, userId: Long, comment: Comment) {
-    val members = member_ids.toList.map(id => Tables.Users.findById(id).get)
     val user = Tables.Users.findById(userId)
-    val msg = Message(kind, roomId, user.get, comment, members)
+    val msg = Message(kind, roomId, user.get, comment, members.toList)
 
     channels.get(roomId) match {
       case Some(channel) => channel.push(Json.toJson(msg))
