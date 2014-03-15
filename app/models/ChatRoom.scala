@@ -74,32 +74,42 @@ class ChatRoom extends Actor {
     }
 
     case NotifyJoin(roomId, userId) => {
-      notifyAll("join", roomId, userId, "has entered the room")
+      notifyMembersUpdate("join", roomId, userId)
     }
 
     case Talk(roomId, userId, text) => {
       val comment = Comment(None, userId, roomId, text, DateTime.now)
       RoomService.createComment(comment)
-      notifyAll("talk", roomId, userId, comment)
+      notifyMessage("talk", roomId, userId, comment)
     }
 
     case Quit(roomId, userId) => {
       members = members - Tables.Users.findById(userId).get
-      notifyAll("quit", roomId, userId, "has left the room")
+      notifyMembersUpdate("quit", roomId, userId)
     }
 
   }
 
-  def notifyAll(kind: String, roomId: Long, userId: Long, comment: Comment) {
+  def notifyMessage(kind: String, roomId: Long, userId: Long, comment: Comment) {
     val user = Tables.Users.findById(userId)
-    val msg = Message(kind, roomId, user.get, comment, members.toList)
+    val msg = Message(kind, roomId, user.get, comment)
 
+    notifyAll(roomId, Json.toJson(msg))
+  }
+
+  def notifyMembersUpdate(kind: String, roomId: Long, userId: Long) {
+    val user = Tables.Users.findById(userId)
+    val msg = UpdateMembers(kind, roomId, user.get, members.toList)
+
+    notifyAll(roomId, Json.toJson(msg))
+  }
+
+  def notifyAll(roomId: Long, msg: JsValue) {
     channels.get(roomId) match {
-      case Some(channel) => channel.push(Json.toJson(msg))
+      case Some(channel) => channel.push(msg)
       case None => Unit
     }
   }
-
 }
 
 case class Join(roomId: Long, userId: Long)

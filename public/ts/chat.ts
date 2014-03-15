@@ -48,12 +48,14 @@ module Chat {
                         $("#onChat").show()
                     }
 
-                    $scope.messages.push(data)
-
-                    $scope.members = []
-                    data.members.forEach((member:Member) => {
-                        $scope.members.push(member)
-                    })
+                    if (data.kind == "talk") {
+                        $scope.messages.push(data)
+                    } else {
+                        $scope.members = []
+                        data.members.forEach((member:Member) => {
+                            $scope.members.push(member)
+                        })
+                    }
 
                     $scope.$digest()
                 }
