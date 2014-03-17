@@ -19,6 +19,7 @@ import scala.collection.mutable
 import org.joda.time.DateTime
 import service.RoomService
 import models.JsonWrites._
+import securesocial.core.{AuthenticationMethod, IdentityId}
 
 object ChatRoom {
 
@@ -29,15 +30,15 @@ object ChatRoom {
     roomActor
   }
 
-  def join(roomId: Long, userId:Long):scala.concurrent.Future[(Iteratee[JsValue,_],Enumerator[JsValue])] = {
+  def join(roomId: Long, user: User):scala.concurrent.Future[(Iteratee[JsValue,_],Enumerator[JsValue])] = {
 
-    (default ? Join(roomId, userId)).map {
+    (default ? Join(roomId, user)).map {
 
       case Connected(enumerator) =>
         val iteratee = Iteratee.foreach[JsValue] { event =>
-          default ! Talk(roomId, userId, (event \ "text").as[String])
+          default ! Talk(roomId, user, (event \ "text").as[String])
         }.map { _ =>
-          default ! Quit(roomId, userId)
+          default ! Quit(roomId, user)
         }
         (iteratee,enumerator)
 
@@ -50,53 +51,39 @@ object ChatRoom {
 }
 
 class ChatRoom extends Actor {
-  implicit def StringToComment(message: String): Comment = Comment(None, 0, 0, message, DateTime.now)
-
-  var members = Set.empty[User]
+  val members = new mutable.HashMap[Long, Set[User]]
   val enumerators = new mutable.HashMap[Long, Enumerator[JsValue]]
   val channels = new mutable.HashMap[Long, Channel[JsValue]]
 
   def receive = {
 
-    case Join(roomId, userId) =>
-        members = members + Tables.Users.findById(userId).get
-        val enumerator = enumerators.get(roomId) match {
-          case Some(e) => e
-          case None =>
-            val (chatEnumerator, chatChannel) = Concurrent.broadcast[JsValue]
-            enumerators.put(roomId, chatEnumerator)
-            channels.put(roomId, chatChannel)
-            chatEnumerator
-        }
-        sender ! Connected(enumerator)
-        self ! NotifyJoin(roomId, userId)
+    case Join(roomId, user) =>
+      val enumerator = enumerators.get(roomId) match {
+        case Some(e) => e
+        case None =>
+          val (chatEnumerator, chatChannel) = Concurrent.broadcast[JsValue]
+          enumerators.put(roomId, chatEnumerator)
+          channels.put(roomId, chatChannel)
+          chatEnumerator
+      }
+      sender ! Connected(enumerator)
+      self ! NotifyJoin(roomId, user)
 
-    case NotifyJoin(roomId, userId) =>
-      notifyMembersUpdate("join", roomId, userId)
+    case NotifyJoin(roomId, user) =>
+      members.put(roomId, members.get(roomId).getOrElse(Set.empty) + user)
+      val msg = UpdateMembers("join", roomId, user, members.get(roomId).get)
+      notifyAll(roomId, Json.toJson(msg))
 
-    case Talk(roomId, userId, text) =>
-      val comment = Comment(None, userId, roomId, text, DateTime.now)
+    case Talk(roomId, user, text) =>
+      val comment = Comment(None, user.uid.get, roomId, text, DateTime.now)
       RoomService.createComment(comment)
-      notifyMessage("talk", roomId, userId, comment)
+      val msg = Message("talk", roomId, user, comment)
+      notifyAll(roomId, Json.toJson(msg))
 
-    case Quit(roomId, userId) =>
-      members = members - Tables.Users.findById(userId).get
-      notifyMembersUpdate("quit", roomId, userId)
-
-  }
-
-  def notifyMessage(kind: String, roomId: Long, userId: Long, comment: Comment) {
-    val user = Tables.Users.findById(userId)
-    val msg = Message(kind, roomId, user.get, comment)
-
-    notifyAll(roomId, Json.toJson(msg))
-  }
-
-  def notifyMembersUpdate(kind: String, roomId: Long, userId: Long) {
-    val user = Tables.Users.findById(userId)
-    val msg = UpdateMembers(kind, roomId, user.get, members.toList)
-
-    notifyAll(roomId, Json.toJson(msg))
+    case Quit(roomId, user) =>
+      members.put(roomId, members.get(roomId).get.filterNot(_.uid == user.uid))
+      val msg = UpdateMembers("quit", roomId, user, members.get(roomId).get)
+      notifyAll(roomId, Json.toJson(msg))
   }
 
   def notifyAll(roomId: Long, msg: JsValue) {
@@ -107,10 +94,10 @@ class ChatRoom extends Actor {
   }
 }
 
-case class Join(roomId: Long, userId: Long)
-case class Quit(roomId: Long, userId: Long)
-case class Talk(roomId: Long, userId: Long, text: String)
-case class NotifyJoin(roomId: Long, userId: Long)
+case class Join(roomId: Long, user: User)
+case class Quit(roomId: Long, user: User)
+case class Talk(roomId: Long, user: User, text: String)
+case class NotifyJoin(roomId: Long, user: User)
 
 case class Connected(enumerator:Enumerator[JsValue])
 case class CannotConnect(msg: String)
