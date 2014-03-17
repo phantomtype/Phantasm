@@ -58,35 +58,30 @@ class ChatRoom extends Actor {
 
   def receive = {
 
-    case Join(roomId, userId) => {
+    case Join(roomId, userId) =>
         members = members + Tables.Users.findById(userId).get
         val enumerator = enumerators.get(roomId) match {
           case Some(e) => e
-          case None => {
+          case None =>
             val (chatEnumerator, chatChannel) = Concurrent.broadcast[JsValue]
             enumerators.put(roomId, chatEnumerator)
             channels.put(roomId, chatChannel)
             chatEnumerator
-          }
         }
         sender ! Connected(enumerator)
         self ! NotifyJoin(roomId, userId)
-    }
 
-    case NotifyJoin(roomId, userId) => {
+    case NotifyJoin(roomId, userId) =>
       notifyMembersUpdate("join", roomId, userId)
-    }
 
-    case Talk(roomId, userId, text) => {
+    case Talk(roomId, userId, text) =>
       val comment = Comment(None, userId, roomId, text, DateTime.now)
       RoomService.createComment(comment)
       notifyMessage("talk", roomId, userId, comment)
-    }
 
-    case Quit(roomId, userId) => {
+    case Quit(roomId, userId) =>
       members = members - Tables.Users.findById(userId).get
       notifyMembersUpdate("quit", roomId, userId)
-    }
 
   }
 
