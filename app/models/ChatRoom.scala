@@ -60,6 +60,7 @@ object ChatRoom {
 class ChatRoom(roomId: Long) extends Actor {
   var members = Set.empty[User]
   val (chatEnumerator, chatChannel) = Concurrent.broadcast[JsValue]
+  val room = RoomService.findRoom(roomId)
 
   def receive = {
 
@@ -70,6 +71,7 @@ class ChatRoom(roomId: Long) extends Actor {
         members = members + user
         sender ! Connected(chatEnumerator)
         self ! NotifyJoin(user)
+        sender ! Talk(user, "hogehoge")
       }
 
     case NotifyJoin(user) =>
@@ -77,8 +79,7 @@ class ChatRoom(roomId: Long) extends Actor {
       notifyAll(Json.toJson(msg))
 
     case Talk(user, text) =>
-      val comment = Comment(None, user.uid.get, roomId, text, DateTime.now)
-      RoomService.createComment(comment)
+      val comment = room.createComment(user, text)
       val msg = Message("talk", roomId, user, comment)
       notifyAll(Json.toJson(msg))
 

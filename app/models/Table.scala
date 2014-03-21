@@ -181,7 +181,12 @@ class Tokens(tag: Tag) extends Table[Token](tag, "token") {
   }
 }
 
-case class Room(id: Option[Long], ownerId: Long, name: String, isPrivate: Boolean, created: DateTime)
+case class Room(id: Option[Long], ownerId: Long, name: String, isPrivate: Boolean, created: DateTime) {
+  def createComment(user: User, text: String): Comment = {
+    val comment = Comment(None, user.uid.get, id.get, text, DateTime.now)
+    Tables.Rooms.createComment(comment)
+  }
+}
 class Rooms(tag: Tag) extends Table[Room](tag, "rooms") {
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def ownerId = column[Long]("ownerId", O.NotNull)
@@ -357,7 +362,12 @@ object Tables extends WithDefaultSession {
 
   }
 
-  val Rooms = TableQuery[Rooms](new Rooms(_))
+  val Rooms = new TableQuery[Rooms](new Rooms(_)) {
+    def createComment(comment: Comment): Comment = withSession { implicit  session =>
+      Tables.Comments.insert(comment)
+      comment
+    }
+  }
 
   val RoomUsers = TableQuery[RoomUsers](new RoomUsers(_))
 

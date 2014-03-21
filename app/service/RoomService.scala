@@ -10,6 +10,13 @@ import scala.Some
 case class RoomService()
 
 object RoomService {
+  def findRoom(id: Long): Room = {
+    DB.withSession {
+      implicit session =>
+        Tables.Rooms.filter(_.id === id).first()
+    }
+  }
+
   def findOwnedRoom(u: User)(implicit s:Session): Option[Room] = {
     val q = for {
       (room, roomUser) <- Tables.Rooms leftJoin Tables.RoomUsers on (_.id === _.roomId)
