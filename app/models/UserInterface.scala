@@ -39,16 +39,12 @@ object JsonWrites {
 
   implicit val implicitUpdateMembersWrites = new Writes[UpdateMembers] {
     def writes(message: UpdateMembers): JsValue = {
-      val result = Json.obj(
+      Json.obj(
         "kind"     -> message.kind,
         "roomId"   -> message.roomId,
         "user"     -> message.user,
         "members"  -> message.members.toSeq
       )
-      println("---")
-      println(result)
-      println("---")
-      result
     }
   }
 }
