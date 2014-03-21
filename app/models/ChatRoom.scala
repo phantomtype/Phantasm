@@ -25,20 +25,27 @@ object ChatRoom {
 
   implicit val timeout = Timeout(1 second)
 
-  lazy val default = {
-    val roomActor = Akka.system.actorOf(Props[ChatRoom])
-    roomActor
+  val rooms = new mutable.HashMap[Long, ActorRef]
+
+  def room(roomId: Long): ActorRef = {
+    if (rooms.contains(roomId)) {
+      rooms.get(roomId).get
+    } else {
+      val room = Akka.system.actorOf(Props(new ChatRoom(roomId)))
+      rooms.put(roomId, room)
+      room
+    }
   }
 
   def join(roomId: Long, user: User):scala.concurrent.Future[(Iteratee[JsValue,_],Enumerator[JsValue])] = {
 
-    (default ? Join(roomId, user)).map {
+    (room(roomId) ? Join(user)).map {
 
       case Connected(enumerator) =>
         val iteratee = Iteratee.foreach[JsValue] { event =>
-          default ! Talk(roomId, user, (event \ "text").as[String])
+          room(roomId) ! Talk(user, (event \ "text").as[String])
         }.map { _ =>
-          default ! Quit(roomId, user)
+          room(roomId) ! Quit(user)
         }
         (iteratee,enumerator)
 
@@ -50,54 +57,46 @@ object ChatRoom {
   }
 }
 
-class ChatRoom extends Actor {
-  val members = new mutable.HashMap[Long, Set[User]]
-  val enumerators = new mutable.HashMap[Long, Enumerator[JsValue]]
-  val channels = new mutable.HashMap[Long, Channel[JsValue]]
+class ChatRoom(roomId: Long) extends Actor {
+  var members = Set.empty[User]
+  val (chatEnumerator, chatChannel) = Concurrent.broadcast[JsValue]
 
   def receive = {
 
-    case Join(roomId, user) =>
-      val enumerator = enumerators.get(roomId) match {
-        case Some(e) => e
-        case None =>
-          val (chatEnumerator, chatChannel) = Concurrent.broadcast[JsValue]
-          enumerators.put(roomId, chatEnumerator)
-          channels.put(roomId, chatChannel)
-          chatEnumerator
+    case Join(user) =>
+      if (members.contains(user)) {
+        self ! CannotConnect("user already")
+      } else {
+        members = members + user
+        sender ! Connected(chatEnumerator)
+        self ! NotifyJoin(user)
       }
-      sender ! Connected(enumerator)
-      self ! NotifyJoin(roomId, user)
 
-    case NotifyJoin(roomId, user) =>
-      members.put(roomId, members.get(roomId).getOrElse(Set.empty) + user)
-      val msg = UpdateMembers("join", roomId, user, members.get(roomId).get)
-      notifyAll(roomId, Json.toJson(msg))
+    case NotifyJoin(user) =>
+      val msg = UpdateMembers("join", roomId, user, members)
+      notifyAll(Json.toJson(msg))
 
-    case Talk(roomId, user, text) =>
+    case Talk(user, text) =>
       val comment = Comment(None, user.uid.get, roomId, text, DateTime.now)
       RoomService.createComment(comment)
       val msg = Message("talk", roomId, user, comment)
-      notifyAll(roomId, Json.toJson(msg))
+      notifyAll(Json.toJson(msg))
 
-    case Quit(roomId, user) =>
-      members.put(roomId, members.get(roomId).get.filterNot(_.uid == user.uid))
-      val msg = UpdateMembers("quit", roomId, user, members.get(roomId).get)
-      notifyAll(roomId, Json.toJson(msg))
+    case Quit(user) =>
+      members = members - user
+      val msg = UpdateMembers("quit", roomId, user, members)
+      notifyAll(Json.toJson(msg))
   }
 
-  def notifyAll(roomId: Long, msg: JsValue) {
-    channels.get(roomId) match {
-      case Some(channel) => channel.push(msg)
-      case None => Unit
-    }
+  def notifyAll(msg: JsValue) {
+      chatChannel.push(msg)
   }
 }
 
-case class Join(roomId: Long, user: User)
-case class Quit(roomId: Long, user: User)
-case class Talk(roomId: Long, user: User, text: String)
-case class NotifyJoin(roomId: Long, user: User)
+case class Join(user: User)
+case class Quit(user: User)
+case class Talk(user: User, text: String)
+case class NotifyJoin(user: User)
 
 case class Connected(enumerator:Enumerator[JsValue])
 case class CannotConnect(msg: String)
