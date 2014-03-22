@@ -22,9 +22,9 @@ object RoomService {
       (room, roomUser) <- Tables.Rooms leftJoin Tables.RoomUsers on (_.id === _.roomId)
       (roomUser, user) <- Tables.RoomUsers leftJoin Tables.Users on (_.userId === _.uid)
       if roomUser.userId is u.uid
-    } yield (room, roomUser, user)
+    } yield room
 
-    q.map(_._1).firstOption
+    q.firstOption
   }
 
   def createPrivateRoomUnlessExist(u: User): Long = {
