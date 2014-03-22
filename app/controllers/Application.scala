@@ -28,8 +28,8 @@ object Application extends Controller with securesocial.core.SecureSocial {
         val id = RoomService.createPrivateRoomUnlessExist(u)
         Redirect(routes.Application.room(id))
       case None =>
-    Ok(views.html.index())
-  }
+        Ok(views.html.index())
+    }
   }
 
   def room(id: Long) = SecuredAction { implicit rs =>
