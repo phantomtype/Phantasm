@@ -5,6 +5,11 @@
     }
 }
 
+div.messages {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 div.message
 {
     border-bottom: 1px solid #ccc;
@@ -25,8 +30,8 @@ img.large
 
 img.avatar
 {
-    max-width: 24px;
-    max-height: 24px;
+    max-width: 36px;
+    max-height: 36px;
 }
 
 .row
