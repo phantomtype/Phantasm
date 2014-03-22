@@ -4,7 +4,6 @@ import akka.actor._
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-import play.api._
 import play.api.libs.json._
 import play.api.libs.iteratee._
 import play.api.libs.concurrent._
@@ -14,12 +13,9 @@ import akka.pattern.ask
 
 import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits._
-import play.api.libs.iteratee.Concurrent.Channel
 import scala.collection.mutable
-import org.joda.time.DateTime
 import service.RoomService
 import models.JsonWrites._
-import securesocial.core.{AuthenticationMethod, IdentityId}
 
 object ChatRoom {
 
