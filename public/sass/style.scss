@@ -12,6 +12,7 @@ body {
 #chatContent {
     display: flex;
     height: 100%;
+    padding-top: 50px;
 
     #onChat {
         flex: 1;
@@ -31,6 +32,7 @@ body {
 
         .talk {
             display: flex;
+            margin: 5px 5px 20px 5px;
         }
     }
 }

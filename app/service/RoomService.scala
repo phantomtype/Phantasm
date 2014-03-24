@@ -46,7 +46,7 @@ object RoomService {
         comment <- Tables.Comments if comment.roomId is roomId
         user <- Tables.Users if comment.userId === user.uid
       } yield (comment, user)
-      q.sortBy(_._1.created.desc).take(10).list
+      q.sortBy(_._1.created.desc).take(20).list
   }
 
   def createComment(comment: Comment): Comment = {
