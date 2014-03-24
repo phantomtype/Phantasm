@@ -6,9 +6,8 @@
 
 @main("sockets") {
 
-<div ng-init="roomId = @id; userId = @user.get.uid.get">
-    <div id="onChat" class="row" ng-controller="Chat.Controller">
-        <div class="col-md-8">
+<div id="chatContent" ng-init="roomId = @id; userId = @user.get.uid.get">
+    <div id="onChat" class="" ng-controller="Chat.Controller">
             <div class="messages">
                 <div class="message" ng-repeat="msg in messages">
                     <img class="avatar" src="{{msg.user.avatar}}"/>
@@ -20,7 +19,6 @@
             <div class="talk">
                 <textarea ng-keypress="talk($event)" ng-model="talkBody" class="form-control" rows="3"></textarea>
             </div>
-        </div>
     </div>
 </div>
 
