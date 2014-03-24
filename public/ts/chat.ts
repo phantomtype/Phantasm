@@ -20,6 +20,7 @@ module Chat {
                 result.reverse().forEach((message: Message) => {
                     $scope.messages.push(message)
                 })
+                $("div.messages").animate({ scrollTop: $("div.messages")[0].scrollHeight }, 'fast')
             })
 
             $http.get("/room/" + $scope.roomId + "/" + $scope.userId + "/wspath").success((result) => {
@@ -33,6 +34,7 @@ module Chat {
                             {text: $scope.talkBody}
                         ))
                         $scope.talkBody = ""
+                        $("div.messages").animate({ scrollTop: $("div.messages")[0].scrollHeight }, 'fast')
                     }
                 }
 
