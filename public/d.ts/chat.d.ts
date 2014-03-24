@@ -15,5 +15,5 @@ interface Member {
 
 interface Comment {
 	message: string
-	created: date
+	created: Date
 }

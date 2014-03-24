@@ -24,7 +24,7 @@ module Chat {
             })
 
             $http.get("/room/" + $scope.roomId + "/" + $scope.userId + "/wspath").success((result) => {
-                var WS = window['MozWebSocket'] ? MozWebSocket : WebSocket
+                var WS = WebSocket
                 var chatSocket = new WS(result.path)
 
                 $scope.talk = (e:KeyboardEvent) => {
@@ -60,6 +60,7 @@ module Chat {
                     }
 
                     $scope.$digest()
+                    $("div.messages").animate({ scrollTop: $("div.messages")[0].scrollHeight }, 'fast')
                 }
             })
         }
