@@ -11,7 +11,7 @@
         <div class="messages-chat">
             <div class="messages">
                 <div class="message" ng-repeat="msg in messages">
-                    <img class="avatar" src="{{msg.user.avatarUrl}}"/>
+                    <img class="avatar" ng-src="{{msg.user.avatarUrl}}"/>
                     <span>{{msg.user.fullName}}</span>
                     <p>{{msg.comment.message}}</p>
                     <p class="pull-right">{{msg.comment.created | date:'M月d日 HH:mm'}}</p>
@@ -25,7 +25,7 @@
             <ul>
                 <li class="header">members</li>
                 <li ng-repeat="member in members">
-                    <img class="avatar-small" src="{{member.avatarUrl}}" />
+                    <img class="avatar-small" ng-src="{{member.avatarUrl}}" />
                     <span>{{member.firstName}}</span>
                 </li>
             </ul>
