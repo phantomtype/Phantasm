@@ -71,21 +71,21 @@ class ChatRoom(roomId: Long) extends Actor {
 
     case NotifyJoin(user) =>
       val msg = UpdateMembers("join", user, members)
-      notifyAll(Json.toJson(msg))
+      notifyAll(msg)
 
     case Talk(user, text) =>
       val comment = room.createComment(user, text)
-      val msg = Message("talk", user, comment)
-      notifyAll(Json.toJson(msg))
+      val msg = TalkMessage("talk", user, comment)
+      notifyAll(msg)
 
     case Quit(user) =>
       members = members - user
       val msg = UpdateMembers("quit", user, members)
-      notifyAll(Json.toJson(msg))
+      notifyAll(msg)
   }
 
-  def notifyAll(msg: JsValue) {
-      chatChannel.push(msg)
+  def notifyAll(msg: Message) {
+      chatChannel.push(Json.toJson(msg))
   }
 }
 
