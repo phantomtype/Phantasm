@@ -17,55 +17,57 @@ body {
     #onChat {
         flex: 1;
         display: flex;
-        flex-direction: column;
 
-        div.messages {
-            flex: 1;
-            overflow-y: auto;
+        .messages-chat {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
 
-            div.message
-            {
-                border-bottom: 1px solid #ccc;
-                padding: 15px 0;
+            .messages {
+                flex: 1;
+                overflow-y: auto;
+
+                div.message
+                {
+                    border-bottom: 1px solid #ccc;
+                    padding: 15px 0;
+                }
+            }
+            .talk {
+                display: flex;
+                margin: 5px 5px 20px 5px;
             }
         }
 
-        .talk {
+        #members {
             display: flex;
-            margin: 5px 5px 20px 5px;
+            margin: 5px 0;
+
+            ul {
+                list-style: none;
+
+                li.header {
+                    padding: 10px;
+                    font-weight: bold;
+                }
+            }
         }
     }
 }
 
-img.thumbnail
-{
-    max-width: 320px;
-    max-height: 320px;
-}
-
-img.large
-{
-    max-width: 800px;
-    max-height: 800px;
-}
-
-img.avatar
-{
+img.avatar {
     max-width: 36px;
     max-height: 36px;
+}
+
+img.avatar-small {
+    max-width: 28px;
+    max-height: 28px;
 }
 
 .row
 {
     margin-bottom: 15px;
-}
-
-div.upload-form
-{
-    margin: 50px 0;
-    padding: 30px 0;
-
-    border: 1px solid #ccc;
 }
 
 .navbar-nav > li > a

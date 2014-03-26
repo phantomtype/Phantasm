@@ -9,8 +9,9 @@ interface Message {
 
 interface Member {
      id:     number
-     avatar: string
-     name:   string
+     avatarUrl: string
+     firstName: string
+     fullName:   string
 }
 
 interface Comment {

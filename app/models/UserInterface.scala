@@ -11,8 +11,9 @@ object JsonWrites {
     def writes(user: User): JsValue = {
       Json.obj(
         "id" -> user.uid.get,
-        "name" -> user.fullName,
-        "avatar"   -> user.avatarUrl.get
+        "fullName" -> user.fullName,
+        "firstName" -> user.firstName,
+        "avatarUrl"   -> user.avatarUrl.get
       )
     }
   }

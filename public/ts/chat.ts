@@ -10,7 +10,7 @@ module Chat {
         messages: Array<Message>
         talkBody: String
         talk: (KeyboardEvent) => void
-        members: Array<any>
+        members: Array<Member>
     }
 
     export class Controller {
@@ -24,8 +24,7 @@ module Chat {
             })
 
             $http.get("/room/" + $scope.roomId + "/" + $scope.userId + "/wspath").success((result) => {
-                var WS = WebSocket
-                var chatSocket = new WS(result.path)
+                var chatSocket = new WebSocket(result.path)
 
                 $scope.talk = (e:KeyboardEvent) => {
                     if (e.charCode == 13 || e.keyCode == 13) {

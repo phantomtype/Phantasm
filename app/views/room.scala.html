@@ -8,10 +8,11 @@
 
 <div id="chatContent" ng-init="roomId = @id; userId = @user.get.uid.get">
     <div id="onChat" class="" ng-controller="Chat.Controller">
+        <div class="messages-chat">
             <div class="messages">
                 <div class="message" ng-repeat="msg in messages">
-                    <img class="avatar" src="{{msg.user.avatar}}"/>
-                    <span>{{msg.user.name}}</span>
+                    <img class="avatar" src="{{msg.user.avatarUrl}}"/>
+                    <span>{{msg.user.fullName}}</span>
                     <p>{{msg.comment.message}}</p>
                     <p class="pull-right">{{msg.comment.created | date:'M月d日 HH:mm'}}</p>
                 </div>
@@ -19,6 +20,16 @@
             <div class="talk">
                 <textarea ng-keypress="talk($event)" ng-model="talkBody" class="form-control" rows="3"></textarea>
             </div>
+        </div>
+        <aside id="members">
+            <ul>
+                <li class="header">members</li>
+                <li ng-repeat="member in members">
+                    <img class="avatar-small" src="{{member.avatarUrl}}" />
+                    <span>{{member.firstName}}</span>
+                </li>
+            </ul>
+        </aside>
     </div>
 </div>
 
