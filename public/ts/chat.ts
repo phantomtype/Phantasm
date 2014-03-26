@@ -20,7 +20,7 @@ module Chat {
                 result.reverse().forEach((message: Message) => {
                     $scope.messages.push(message)
                 })
-                $("div.messages").animate({ scrollTop: $("div.messages")[0].scrollHeight }, 'fast')
+                $("div.messages").animate({ scrollTop: $("div.messages")[0].scrollHeight }, 1)
             })
 
             $http.get("/room/" + $scope.roomId + "/" + $scope.userId + "/wspath").success((result) => {
