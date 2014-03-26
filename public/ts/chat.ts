@@ -26,39 +26,41 @@ module Chat {
             $http.get("/room/" + $scope.roomId + "/" + $scope.userId + "/wspath").success((result) => {
                 var chatSocket = new WebSocket(result.path)
 
-                chatSocket.onmessage = (event) => {
-                    var data:Message = JSON.parse(event.data)
+                chatSocket.onopen = () => {
+                    chatSocket.onmessage = (event) => {
+                        var data:Message = JSON.parse(event.data)
 
-                    // Handle errors
-                    if (data.error) {
-                        chatSocket.close()
-                        console.log(data.error)
-                        return
-                    } else {
-                        $("#onChat").show()
-                    }
+                        // Handle errors
+                        if (data.error) {
+                            chatSocket.close()
+                            console.log(data.error)
+                            return
+                        } else {
+                            $("#onChat").show()
+                        }
 
-                    if (data.kind == "talk") {
-                        $scope.messages.push(data)
-                    } else {
-                        $scope.members = []
-                        data.members.forEach((member:Member) => {
-                            $scope.members.push(member)
-                        })
-                    }
+                        if (data.kind == "talk") {
+                            $scope.messages.push(data)
+                        } else {
+                            $scope.members = []
+                            data.members.forEach((member:Member) => {
+                                $scope.members.push(member)
+                            })
+                        }
 
-                    $scope.$digest()
-                    $("div.messages").animate({ scrollTop: $("div.messages")[0].scrollHeight }, 'fast')
-                }
-
-                $scope.talk = (e:KeyboardEvent) => {
-                    if (e.charCode == 13 || e.keyCode == 13) {
-                        e.preventDefault()
-                        chatSocket.send(JSON.stringify(
-                            {text: $scope.talkBody}
-                        ))
-                        $scope.talkBody = ""
+                        $scope.$digest()
                         $("div.messages").animate({ scrollTop: $("div.messages")[0].scrollHeight }, 'fast')
+                    }
+
+                    $scope.talk = (e:KeyboardEvent) => {
+                        if (e.charCode == 13 || e.keyCode == 13) {
+                            e.preventDefault()
+                            chatSocket.send(JSON.stringify(
+                                {text: $scope.talkBody}
+                            ))
+                            $scope.talkBody = ""
+                            $("div.messages").animate({ scrollTop: $("div.messages")[0].scrollHeight }, 'fast')
+                        }
                     }
                 }
             })
