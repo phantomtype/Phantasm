@@ -17,11 +17,20 @@ object RoomService {
     }
   }
 
-  def findOwnedRoom(u: User)(implicit s:Session): Option[Room] = {
+  def findJoinedRooms(u: User)(implicit s:Session): Option[Room] = {
     val q = for {
       (room, roomUser) <- Tables.Rooms leftJoin Tables.RoomUsers on (_.id === _.roomId)
       (roomUser, user) <- Tables.RoomUsers leftJoin Tables.Users on (_.userId === _.uid)
       if roomUser.userId is u.uid
+    } yield room
+
+    q.firstOption
+  }
+
+  def findOwnedRoom(u: User)(implicit s:Session): Option[Room] = {
+    val q = for {
+      (room) <- Tables.Rooms
+      if room.ownerId is u.uid
     } yield room
 
     q.firstOption
