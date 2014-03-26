@@ -67,7 +67,6 @@ class ChatRoom(roomId: Long) extends Actor {
         members = members + user
         sender ! Connected(chatEnumerator)
         self ! NotifyJoin(user)
-        sender ! Talk(user, "hogehoge")
       }
 
     case NotifyJoin(user) =>
