@@ -10,10 +10,14 @@ import scala.Some
 case class RoomService()
 
 object RoomService {
-  def findRoom(id: Long): Room = {
+  def findRoom(id: Long): Option[Room] = {
     DB.withSession {
       implicit session =>
-        Tables.Rooms.filter(_.id === id).first()
+        val q = for {
+          (room) <- Tables.Rooms if room.id is id
+        } yield room
+
+        q.firstOption
     }
   }
 
@@ -41,7 +45,7 @@ object RoomService {
       findOwnedRoom(u) match {
         case Some(room) => room.id.get
         case None =>
-          val room = Room(None, u.uid.get, "myroom", true, DateTime.now)
+          val room = Room(None, u.uid.get, u.fullName + "'s room", true, DateTime.now)
           val savedId = Tables.Rooms.insert(room)
           val roomUser = RoomUser(None, u.uid.get, savedId, DateTime.now)
           Tables.RoomUsers.insert(roomUser)

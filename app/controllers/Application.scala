@@ -33,7 +33,12 @@ object Application extends Controller with securesocial.core.SecureSocial {
   }
 
   def room(id: Long) = SecuredAction { implicit rs =>
-    Ok(views.html.room(id))
+    RoomService.findRoom(id) match {
+      case Some(room) =>
+        Ok(views.html.room(room))
+      case None =>
+        NotFound
+    }
   }
 
   def chat(roomId: Long, userId: Long) = WebSocket.async[JsValue] { request  =>

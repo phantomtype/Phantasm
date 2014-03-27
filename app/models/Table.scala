@@ -186,6 +186,10 @@ case class Room(id: Option[Long], ownerId: Long, name: String, isPrivate: Boolea
     val comment = Comment(None, user.uid.get, id.get, text, DateTime.now)
     Tables.Rooms.createComment(comment)
   }
+
+  def owner: User = {
+    Tables.Users.findById(ownerId).get
+  }
 }
 class Rooms(tag: Tag) extends Table[Room](tag, "rooms") {
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
