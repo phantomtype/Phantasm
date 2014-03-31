@@ -19,8 +19,8 @@ module.exports = (grunt) ->
         options:
           module: 'amd'
           target: 'es5'
-          sourcemap: true
-          base_path: "ts"
+          sourceMap: true
+          basePath: "ts"
 
     tsd:
       client:
