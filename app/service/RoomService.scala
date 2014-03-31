@@ -10,6 +10,17 @@ import scala.Some
 case class RoomService()
 
 object RoomService {
+  def all(): Seq[Room] = {
+    DB.withSession {
+      implicit session =>
+        val q = for {
+          (room) <- Tables.Rooms
+        } yield room
+
+        q.list()
+    }
+  }
+
   def findRoom(id: Long): Option[Room] = {
     DB.withSession {
       implicit session =>

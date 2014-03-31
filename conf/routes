@@ -1,5 +1,6 @@
 # Home page
 GET  /                                controllers.Application.index
+GET  /rooms                           controllers.Application.rooms
 GET  /room/:id                        controllers.Application.room(id: Long)
 GET  /room/:roomId/:userId            controllers.Application.chat(roomId: Long, userId: Long)
 GET  /recently_messages/:roomId       controllers.Application.recentlyMessage(roomId: Long)

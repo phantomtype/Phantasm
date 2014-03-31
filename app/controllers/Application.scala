@@ -56,4 +56,9 @@ object Application extends Controller with securesocial.core.SecureSocial {
     }
     Ok(Json.toJson(messages))
   }
+
+  def rooms = SecuredAction { implicit rs =>
+    Ok(Json.toJson(RoomService.all))
+  }
+
 }

@@ -27,12 +27,20 @@
                 <textarea ng-keypress="talk($event)" ng-model="talkBody" class="form-control" rows="3" placeholder="input message here."></textarea>
             </div>
         </div>
-        <aside id="members">
-            <ul>
+        <aside id="sidebar">
+            <ul class="members">
                 <li class="header">members</li>
                 <li ng-repeat="member in members">
                     <img class="avatar-small" ng-src="{{member.avatarUrl}}" />
                     <span>{{member.firstName}}</span>
+                </li>
+            </ul>
+
+            <ul class="rooms">
+                <li class="header">rooms</li>
+                <li ng-repeat="room in rooms">
+                    <img class="avatar-small" ng-src="{{room.owner.avatarUrl}}" />
+                    <a ng-href="/room/{{room.id}}">{{room.name}}</a>
                 </li>
             </ul>
         </aside>

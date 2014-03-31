@@ -44,18 +44,20 @@ body {
             }
         }
 
-        #members {
-            display: flex;
-            margin: 5px 0;
+        #sidebar {
+          display: flex;
+          flex-direction: column;
+          margin: 5px 0;
 
-            ul {
-                list-style: none;
+          ul {
+            flex: 1;
+            list-style: none;
 
-                li.header {
-                    padding: 10px;
-                    font-weight: bold;
-                }
+            li.header {
+              padding: 10px;
+              font-weight: bold;
             }
+          }
         }
     }
 }

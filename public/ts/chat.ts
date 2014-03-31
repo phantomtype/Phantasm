@@ -11,6 +11,7 @@ module Chat {
         talkBody: String
         talk: (KeyboardEvent) => void
         members: Array<Member>
+        rooms: Array<Room>
     }
 
     export class Controller {
@@ -21,6 +22,13 @@ module Chat {
                     $scope.messages.push(message)
                 })
                 $("div.messages").animate({ scrollTop: $("div.messages")[0].scrollHeight }, 1)
+            })
+
+            $scope.rooms = []
+            $http.get("/rooms").success((result) => {
+                result.forEach((room: Room) => {
+                    $scope.rooms.push(room)
+                })
             })
 
             $http.get("/room/" + $scope.roomId + "/" + $scope.userId + "/wspath").success((result) => {

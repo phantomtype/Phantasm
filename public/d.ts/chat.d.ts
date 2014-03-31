@@ -1,3 +1,9 @@
+interface Room {
+    id: number
+    name: string
+    owner: Member
+    is_private: boolean
+}
 
 interface Message {
     members: Array<Member>

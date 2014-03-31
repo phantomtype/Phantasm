@@ -19,6 +19,17 @@ object JsonWrites {
     }
   }
 
+  implicit val implicitRoomWrites = new Writes[Room] {
+    def writes(room: Room): JsValue = {
+      Json.obj(
+        "id" -> room.id.get,
+        "name" -> room.name,
+        "owner" -> room.owner,
+        "is_private" -> room.isPrivate
+      )
+    }
+  }
+
   implicit val implicitCommentWrites = new Writes[Comment] {
     def writes(comment: Comment): JsValue = {
       Json.obj(
