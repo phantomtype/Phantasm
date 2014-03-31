@@ -17,10 +17,7 @@ conf/evolutions/default
 securesocial.conf
 public/node_modules
 bower_components
-public/js/*.js
 public/js/*.js.map
 public/components
 public/lib
-public/css
-public/.idea
 public/d.ts/DefinitelyTyped

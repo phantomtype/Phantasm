@@ -1,0 +1,112 @@
+html
+{
+    height: 100%;
+}
+
+body
+{
+    font-family: 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', sans-serif;
+    font-size: 13px;
+
+    height: 100%;
+}
+
+.container
+{
+    height: 100%;
+}
+
+#chatContent
+{
+    display: flex;
+
+    height: 100%;
+    padding-top: 50px;
+}
+
+#chatContent #onChat
+{
+    display: flex;
+
+    flex: 1;
+}
+
+#chatContent #onChat .messages-chat
+{
+    display: flex;
+    flex-direction: column;
+
+    flex: 2;
+}
+
+#chatContent #onChat .messages-chat header
+{
+    font-size: 24px;
+
+    padding: 10px 0;
+}
+
+#chatContent #onChat .messages-chat .messages
+{
+    overflow-y: auto;
+
+    flex: 1;
+}
+
+#chatContent #onChat .messages-chat .messages div.message
+{
+    padding: 15px 0;
+
+    border-bottom: 1px solid #ccc;
+}
+
+#chatContent #onChat .messages-chat .talk
+{
+    display: flex;
+
+    margin: 5px 5px 20px 5px;
+}
+
+#chatContent #onChat #sidebar
+{
+    display: flex;
+    flex-direction: column;
+
+    margin: 5px 0;
+}
+
+#chatContent #onChat #sidebar ul
+{
+    list-style: none;
+
+    flex: 1;
+}
+
+#chatContent #onChat #sidebar ul li.header
+{
+    font-weight: bold;
+
+    padding: 10px;
+}
+
+img.avatar
+{
+    max-width: 36px;
+    max-height: 36px;
+}
+
+img.avatar-small
+{
+    max-width: 28px;
+    max-height: 28px;
+}
+
+.row
+{
+    margin-bottom: 15px;
+}
+
+.navbar-nav > li > a
+{
+    padding-bottom: 0;
+}
