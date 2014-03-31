@@ -56,7 +56,7 @@ object RoomService {
       findOwnedRoom(u) match {
         case Some(room) => room.id.get
         case None =>
-          val room = Room(None, u.uid.get, u.fullName + "'s room", true, DateTime.now)
+          val room = Room(None, u.uid.get, u.firstName + "'s room", true, DateTime.now)
           val savedId = Tables.Rooms.insert(room)
           val roomUser = RoomUser(None, u.uid.get, savedId, DateTime.now)
           Tables.RoomUsers.insert(roomUser)
