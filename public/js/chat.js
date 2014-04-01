@@ -1,3 +1,4 @@
+
 var Chat;
 (function (Chat) {
     var Controller = (function () {

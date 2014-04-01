@@ -1,17 +1,43 @@
 /// <reference path="../d.ts/DefinitelyTyped/jquery/jquery.d.ts" />
 /// <reference path="../d.ts/DefinitelyTyped/angularjs/angular.d.ts" />
-/// <reference path="../d.ts/chat.d.ts" />
+
+interface Room {
+    id: number
+    name: string
+    owner: Member
+    is_private: boolean
+}
+
+interface Message {
+    members: Array<Member>
+    error:   string
+    user:    Member
+    comment: Comment
+    kind:    string
+}
+
+interface Member {
+    id:     number
+    avatarUrl: string
+    firstName: string
+    fullName:   string
+}
+
+interface Comment {
+    message: string
+    created: Date
+}
 
 module Chat {
 
     export interface Scope extends ng.IScope {
         roomId: number
         userId: number
-        messages: Array<Message>
+        messages: Message[]
         talkBody: String
         talk: (KeyboardEvent) => void
-        members: Array<Member>
-        rooms: Array<Room>
+        members: Member[]
+        rooms: Room[]
     }
 
     export class Controller {
