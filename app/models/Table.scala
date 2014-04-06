@@ -1,15 +1,12 @@
 package models
 
 import securesocial.core._
-// import play.api.db.slick.Config.driver.simple._
-import scala.slick.driver.MySQLDriver.simple._
+import play.api.db.slick.Config.driver.simple._
 import scala.slick.lifted.ProvenShape
 
-//import play.api.db.slick.DB
 import securesocial.core.Identity
 import securesocial.core.OAuth1Info
-import com.github.tototoshi.slick.MySQLJodaSupport._
-//import play.api.Play.current
+import com.github.tototoshi.slick.H2JodaSupport._
 
 import securesocial.core.providers.Token
 
