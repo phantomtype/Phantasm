@@ -21,3 +21,5 @@ public/js/*.js.map
 public/components
 public/lib
 public/d.ts/DefinitelyTyped
+public/js
+public/css
