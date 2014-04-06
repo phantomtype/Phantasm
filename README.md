@@ -21,6 +21,7 @@ write ```clientId``` and ```clientSecret``` of Facebook API.
 ```
 cd public
 npm install
+grunt
 ```
 
 ## Run as Play application.
