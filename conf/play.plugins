@@ -2,5 +2,6 @@
 9995:securesocial.core.DefaultIdGenerator
 9997:controllers.Login
 9998:service.UserService
+10000:securesocial.core.providers.TwitterProvider
 10001:securesocial.core.providers.FacebookProvider
 
