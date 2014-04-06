@@ -14,7 +14,7 @@ dist
 /RUNNING_PID
 /.settings
 conf/evolutions/default
-securesocial.conf
+conf/securesocial.conf
 public/node_modules
 bower_components
 public/js/*.js.map
@@ -23,3 +23,4 @@ public/lib
 public/d.ts/DefinitelyTyped
 public/js
 public/css
+conf/database.conf
