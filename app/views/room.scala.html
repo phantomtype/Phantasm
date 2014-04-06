@@ -1,8 +1,6 @@
 @(room: Room)(implicit flash: play.api.mvc.Flash, user:Option[models.User])
 
-@import helper._
 @import controllers._
-@import securesocial.core.SecureSocial
 
 @main("Phantasm") {
 
@@ -32,7 +30,7 @@
                 <li class="header">members</li>
                 <li ng-repeat="member in members">
                     <img class="avatar-small" ng-src="{{member.avatarUrl}}" />
-                    <span>{{member.firstName}}</span>
+                    <span>{{member.fullName}}</span>
                 </li>
             </ul>
 
