@@ -4,24 +4,32 @@ Phantasm is a real time communication tool. Powered by Play framework.
 
 # Getting started
 
-## Download the Phantasm
+## Download the Phantasm.
 
 ```git clone git@github.com:phantomtype/Phantasm.git``` or donwload [zip archive](https://github.com/phantomtype/Phantasm/archive/master.zip).
 
-## Setup securesocial
+## Setup secret.conf
 
-rename ```conf/securesocial.sample.conf``` to ```conf/securesocial.conf```
+copy ```conf/secret.sample.conf``` to ```conf/secret.conf```
+
+in ```conf/secret.conf```
+
+fill in ```application.secret=[secret key]```
+
+## Setup securesocial.
+
+copy ```conf/securesocial.sample.conf``` to ```conf/securesocial.conf```
 
 in ```conf/securesocial.conf```
 
-edit ```clientId``` and ```clientSecret``` to corresponding Facebook API.
+fill in ```clientId``` and ```clientSecret```.
 
-## Setup database
+## Setup database.
 
-rename ```conf/database.sample.conf``` to ```conf/database.conf```
+copy ```conf/database.sample.conf``` to ```conf/database.conf```
 
 
-## Setup front end
+## Setup front end.
 
 ```
 cd public
@@ -35,7 +43,7 @@ grunt
 
 and open the web browser ```http://localhost:9000/```
 
-# Authorization other than Facebook
+# Authorization configuration.
 
 Please see [SecureSocial](http://securesocial.ws/).
 and edit ```conf/play.plugins```, ```conf/securesocial.conf```
