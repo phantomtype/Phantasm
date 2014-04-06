@@ -4,9 +4,11 @@ Phantasm is a real time communication tool. Powered by Play framework.
 
 # Getting started
 
-download the Phantasm
+## Download the Phantasm
 
 ```git clone git@github.com:phantomtype/Phantasm.git```
+
+## Setup securesocial
 
 rename ```conf/securesocial.sample.conf``` to ```conf/securesocial.conf```
 
@@ -14,7 +16,14 @@ in ```conf/securesocial.conf```
 
 write ```clientId``` and ```clientSecret``` of Facebook API.
 
-then run Play application.
+## Setup front end
+
+```
+cd public
+npm install
+```
+
+## Run Play application.
 
 ```play run```
 
