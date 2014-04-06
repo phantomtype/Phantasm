@@ -23,13 +23,13 @@ cd public
 npm install
 ```
 
-## Run Play application.
+## Run as Play application.
 
 ```play run```
 
 and open the web browser ```http://localhost:9000/```
 
-# Authorization with other than Facebook
+# Authorization other than Facebook
 
 Please see [SecureSocial](http://securesocial.ws/).
 and edit ```conf/play.plugins```, ```conf/securesocial.conf```
