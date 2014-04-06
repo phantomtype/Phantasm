@@ -61,5 +61,5 @@ module.exports = (grunt) ->
   for taskName of pkg.devDependencies when taskName.substring(0, 6) is 'grunt-'
     grunt.loadNpmTasks taskName
 
-  grunt.registerTask('default', ['bower:install']);
-  grunt.registerTask('compile', ['typescript']);
+  grunt.registerTask('compile', ['typescript', 'compass', 'cmq', 'csscomb']);
+  grunt.registerTask('default', ['bower:install', 'compile']);
