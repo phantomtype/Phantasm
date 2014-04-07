@@ -2,6 +2,10 @@
 
 Phantasm is a real time communication tool. Powered by Play framework.
 
+# Demo
+
+Demo site is [here](http://www.phantomtype.com:9000/)
+
 # Getting started
 
 ## Download the Phantasm.
