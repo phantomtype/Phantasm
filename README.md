@@ -6,7 +6,7 @@ Phantasm is a real time communication tool. Powered by Play framework.
 
 ## Download the Phantasm.
 
-```git clone git@github.com:phantomtype/Phantasm.git``` or donwload [zip archive](https://github.com/phantomtype/Phantasm/archive/master.zip).
+```git clone https://github.com/phantomtype/Phantasm.git``` or donwload [zip archive](https://github.com/phantomtype/Phantasm/archive/master.zip).
 
 ## Setup secret.conf
 
