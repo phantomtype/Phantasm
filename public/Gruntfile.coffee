@@ -62,4 +62,4 @@ module.exports = (grunt) ->
     grunt.loadNpmTasks taskName
 
   grunt.registerTask('compile', ['typescript', 'compass', 'cmq', 'csscomb']);
-  grunt.registerTask('default', ['bower:install', 'compile']);
+  grunt.registerTask('default', ['bower:install', 'tsd', 'compile']);
