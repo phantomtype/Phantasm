@@ -6,7 +6,7 @@ module.exports = (grunt) ->
       install:
         options:
           targetDir: './lib'
-          layout: 'byType'
+          layout: 'byComponent'
           install: true
           verbose: false
           cleanTargetDir: true

@@ -8,6 +8,9 @@ import play.api.mvc.WebSocket
 import scala.Some
 import play.api.libs.json.{JsValue, Writes, Json}
 import models.JsonWrites._
+import play.api.data.Form
+import play.api.data.Forms._
+import org.joda.time.DateTime
 
 object Application extends Controller with securesocial.core.SecureSocial {
 
@@ -23,13 +26,7 @@ object Application extends Controller with securesocial.core.SecureSocial {
   }
 
   def index = UserAwareAction { implicit rs =>
-    user match {
-      case Some(u) =>
-        val id = RoomService.createPrivateRoomUnlessExist(u)
-        Redirect(routes.Application.room(id))
-      case None =>
-        Ok(views.html.index())
-    }
+    Ok(views.html.rooms())
   }
 
   def room(id: Long) = SecuredAction { implicit rs =>
@@ -39,6 +36,17 @@ object Application extends Controller with securesocial.core.SecureSocial {
       case None =>
         NotFound
     }
+  }
+
+  def createRoom() = SecuredAction { implicit rs =>
+    Form(tuple("name" -> nonEmptyText, "isPrivate" -> boolean)).bindFromRequest.fold(
+      errors => BadRequest,
+      (form) => {
+        val room = Room(None, user.get.uid.get, form._1, form._2, DateTime.now)
+        RoomService.createRoom(room)
+        NoContent
+      }
+    )
   }
 
   def chat(roomId: Long, userId: Long) = WebSocket.async[JsValue] { request  =>
@@ -51,7 +59,7 @@ object Application extends Controller with securesocial.core.SecureSocial {
   }
 
   def recentlyMessage(roomId: Long) = SecuredAction { implicit request =>
-    val messages = RoomService.recent_comments(roomId).map { t =>
+    val messages = RoomService.recent_comments(roomId, 20).map { t =>
       TalkMessage("talk", t._2, t._1)
     }
     Ok(Json.toJson(messages))

@@ -32,45 +32,41 @@ object RoomService {
     }
   }
 
-  def findJoinedRooms(u: User)(implicit s:Session): Option[Room] = {
+  def findJoinedRooms(u: User)(implicit s:Session): List[Room] = {
     val q = for {
       (room, roomUser) <- Tables.Rooms leftJoin Tables.RoomUsers on (_.id === _.roomId)
       (roomUser, user) <- Tables.RoomUsers leftJoin Tables.Users on (_.userId === _.uid)
       if roomUser.userId is u.uid
     } yield room
 
-    q.firstOption
+    q.list()
   }
 
-  def findOwnedRoom(u: User)(implicit s:Session): Option[Room] = {
+  def findOwnedRooms(u: User)(implicit s:Session): List[Room] = {
     val q = for {
       (room) <- Tables.Rooms
       if room.ownerId is u.uid
     } yield room
 
-    q.firstOption
+    q.list()
   }
 
-  def createPrivateRoomUnlessExist(u: User): Long = {
+  def createRoom(room: Room): Long = {
     DB.withSession { implicit session =>
-      findOwnedRoom(u) match {
-        case Some(room) => room.id.get
-        case None =>
-          val room = Room(None, u.uid.get, u.fullName + "'s room", true, DateTime.now)
-          val savedId = Tables.Rooms.insert(room)
-          val roomUser = RoomUser(None, u.uid.get, savedId, DateTime.now)
-          Tables.RoomUsers.insert(roomUser)
-      }
+      val roomId = Tables.Rooms.insert(room)
+      val roomUser = RoomUser(None, room.ownerId, roomId, DateTime.now)
+      Tables.RoomUsers.insert(roomUser)
+      roomId
     }
   }
 
-  def recent_comments(roomId: Long): Seq[(Comment, User)] = DB.withSession {
+  def recent_comments(roomId: Long, size: Int): Seq[(Comment, User)] = DB.withSession {
     implicit session =>
       val q = for {
         comment <- Tables.Comments if comment.roomId is roomId
         user <- Tables.Users if comment.userId === user.uid
       } yield (comment, user)
-      q.sortBy(_._1.created.desc).take(20).list
+      q.sortBy(_._1.created.desc).take(size).list
   }
 
   def createComment(comment: Comment): Comment = {

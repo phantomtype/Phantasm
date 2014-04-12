@@ -11,6 +11,7 @@ import com.github.tototoshi.slick.H2JodaSupport._
 import securesocial.core.providers.Token
 
 import org.joda.time.DateTime
+import service.RoomService
 
 
 case class User(uid: Option[Long] = None,
@@ -187,6 +188,15 @@ case class Room(id: Option[Long], ownerId: Long, name: String, isPrivate: Boolea
   def owner: User = {
     Tables.Users.findById(ownerId).get
   }
+
+  def latest_post: Option[Comment] = {
+    RoomService.recent_comments(this.id.get, 1).headOption match {
+      case Some(comment) =>
+        Some(comment._1)
+      case None =>
+        None
+    }
+  }
 }
 class Rooms(tag: Tag) extends Table[Room](tag, "rooms") {
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
@@ -198,8 +208,11 @@ class Rooms(tag: Tag) extends Table[Room](tag, "rooms") {
   def * = (id.?, ownerId, name, isPrivate, created) <> (Room.tupled, Room.unapply)
 }
 
-
-case class Comment(id: Option[Long], userId: Long, roomId: Long, message: String, created: DateTime)
+case class Comment(id: Option[Long], userId: Long, roomId: Long, message: String, created: DateTime) {
+  def user: User = {
+    Tables.Users.findById(userId).get
+  }
+}
 class Comments(tag: Tag) extends Table[Comment](tag, "comments") {
   def id      = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def userId  = column[Long]("userId", O.NotNull)

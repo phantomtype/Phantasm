@@ -1,6 +1,6 @@
 package models
 
-import play.api.libs.json.{Json, JsValue, Writes}
+import play.api.libs.json._
 
 abstract class Message()
 case class TalkMessage(kind: String, user: User, comment: Comment) extends Message
@@ -19,23 +19,30 @@ object JsonWrites {
     }
   }
 
-  implicit val implicitRoomWrites = new Writes[Room] {
-    def writes(room: Room): JsValue = {
+  implicit val implicitCommentWrites = new Writes[Comment] {
+    def writes(comment: Comment): JsValue = {
       Json.obj(
-        "id" -> room.id.get,
-        "name" -> room.name,
-        "owner" -> room.owner,
-        "is_private" -> room.isPrivate
+        "user" -> comment.user,
+        "message" -> comment.message,
+        "created" -> comment.created
       )
     }
   }
 
-  implicit val implicitCommentWrites = new Writes[Comment] {
-    def writes(comment: Comment): JsValue = {
-      Json.obj(
-        "message" -> comment.message,
-        "created" -> comment.created
+  implicit val implicitRoomWrites = new Writes[Room] {
+    def writes(room: Room): JsValue = {
+      val latest_post: JsValue = room.latest_post match {
+        case Some(post) => Json.toJson(post)
+        case None => JsNull
+      }
+      val result = Json.obj(
+        "id" -> room.id.get,
+        "name" -> room.name,
+        "owner" -> room.owner,
+        "is_private" -> room.isPrivate,
+        "latest_post" -> latest_post
       )
+      result
     }
   }
 

@@ -1,0 +1,42 @@
+@()(implicit flash: play.api.mvc.Flash, user:Option[models.User])
+
+@main("Phantasm") {
+
+    <div id="rooms" ng-controller="Rooms.Controller">
+        <h2>Rooms index</h2>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Latest Post</th>
+                    <th>Owner</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="room in rooms" ng-click="openRoom(room)">
+                    <td><a ng-href="/room/{{room.id}}">{{room.name}} <span ng-if="room.is_private"><span class="glyphicon glyphicon-star"></span></span></a></td>
+                    <td>{{room.latest_post.created | date:'yyyy/MM/dd HH:mm'}} <img class="avatar-small" ng-src="{{room.latest_post.user.avatarUrl}}" /></td>
+                    <td><img class="avatar-small" ng-src="{{room.owner.avatarUrl}}" /> {{room.owner.fullName}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button class="btn btn-default" ng-click="showCreateRoomForm($event)">Create Room</button>
+        <form id="new-room" class="form-inline" role="form">
+            <div class="form-group">
+                <label class="sr-only">Email address</label>
+                <input type="text" ng-model="newRoom.name" class="form-control" placeholder="Enter name">
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="newRoom.isPrivate"> Private?
+                </label>
+            </div>
+            <button class="btn btn-primary" ng-click="createRoom($event)">Create</button>
+            <button class="btn btn-default" ng-click="close()">Cancel</button>
+        </form>
+    </div>
+
+    <script type='text/javascript' src='@routes.Assets.at("js/chat.js")'></script>
+}

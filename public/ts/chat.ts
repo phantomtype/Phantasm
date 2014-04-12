@@ -6,6 +6,7 @@ interface Room {
     name: string
     owner: Member
     is_private: boolean
+    latest_post: Comment
 }
 
 interface Message {
@@ -24,8 +25,50 @@ interface Member {
 }
 
 interface Comment {
+    user: Member
     message: string
     created: Date
+}
+
+module Rooms {
+    export interface  Scope extends  ng.IScope {
+        newRoom: Room
+        rooms: Room[]
+        list: () => void
+        showCreateRoomForm: (e:MouseEvent) => void
+        close: () => void
+        createRoom: (e:MouseEvent) => void
+    }
+
+    export class Controller {
+        constructor($scope: Scope, $http:ng.IHttpService) {
+            $scope.list = () => {
+                $scope.rooms = []
+                $http.get("/rooms").success((result) => {
+                    result.forEach((room: Room) => {
+                        $scope.rooms.push(room)
+                    })
+                })
+            }
+            $scope.list()
+
+            $("#new-room").hide()
+            $scope.showCreateRoomForm = (e:MouseEvent) => {
+                $("#new-room").show()
+            }
+
+            $scope.close = () => {
+                $("#new-room").hide()
+            }
+
+            $scope.createRoom = (e:MouseEvent) => {
+                $http.post("/room/create", $scope.newRoom).success((data) => {
+                    $scope.close()
+                    $scope.list()
+                })
+            }
+        }
+    }
 }
 
 module Chat {

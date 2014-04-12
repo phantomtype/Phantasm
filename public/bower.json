@@ -5,7 +5,7 @@
     "YusukeKokubo <yusuke.kokubo@gmail.com>"
   ],
   "license": "MIT",
-  "private": true,
+  "private": false,
   "ignore": [
     "**/.*",
     "node_modules",
@@ -17,5 +17,10 @@
     "jquery": "~2.0",
     "bootstrap": "~3.0",
     "angular": "~1.2"
+  },
+  "exportsOverride": {
+    "bootstrap": {
+      "": "dist"
+    }
   }
 }
