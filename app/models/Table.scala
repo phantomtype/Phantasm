@@ -6,7 +6,7 @@ import scala.slick.lifted.ProvenShape
 
 import securesocial.core.Identity
 import securesocial.core.OAuth1Info
-import com.github.tototoshi.slick.H2JodaSupport._
+import com.github.tototoshi.slick.MySQLJodaSupport._
 
 import securesocial.core.providers.Token
 
