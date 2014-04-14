@@ -1,5 +1,6 @@
 /// <reference path="../d.ts/DefinitelyTyped/jquery/jquery.d.ts" />
 /// <reference path="../d.ts/DefinitelyTyped/angularjs/angular.d.ts" />
+/// <reference path="./notify.js.d.ts" />
 
 interface Room {
     id: number
@@ -29,6 +30,7 @@ interface Comment {
     message: string
     created: Date
 }
+
 
 module Rooms {
     export interface  Scope extends  ng.IScope {
@@ -81,6 +83,12 @@ module Chat {
         talk: (KeyboardEvent) => void
         members: Member[]
         rooms: Room[]
+        isSupportedNotification : boolean
+        needsPermission : boolean
+        useNotification : boolean
+        requestPermission: ()=> void
+        toggleNotification: ()=> void
+        notify : notify.INotify
     }
 
     export class Controller {
@@ -118,6 +126,11 @@ module Chat {
 
                         if (data.kind == "talk") {
                             $scope.messages.push(data)
+
+                            if($scope.useNotification && data.user.id != $scope.userId) {
+                                var notify = new Notify("Phantasm", {body : data.comment.message});
+                                notify.show();
+                            }
                         } else {
                             $scope.members = []
                             data.members.forEach((member:Member) => {
@@ -141,6 +154,17 @@ module Chat {
                     }
                 }
             })
+
+            $scope.useNotification = false;
+            $scope.isSupportedNotification = Notify.isSupported()
+            $scope.needsPermission = Notify.needsPermission()
+
+            $scope.requestPermission = () => {
+                Notify.requestPermission(()=> {
+                    $scope.useNotification = true
+                })
+            }
+            $scope.toggleNotification = ()=> $scope.useNotification = !$scope.useNotification
         }
     }
 }
