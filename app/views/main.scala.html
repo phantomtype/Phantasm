@@ -1,4 +1,4 @@
-@(title: String)(content: Html)(implicit user:Option[securesocial.core.Identity])
+@(title: String)(content: Html)(implicit flash: play.api.mvc.Flash, user:Option[models.User], request: RequestHeader)
 
 <!doctype html>
 <html ng-app>

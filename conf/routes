@@ -3,9 +3,9 @@ GET         /                                   controllers.Application.index
 GET         /rooms                              controllers.Application.rooms
 POST        /room/create                        controllers.Application.createRoom
 GET         /room/:id                           controllers.Application.room(id: Long)
-GET         /room/:roomId/:userId               controllers.Application.chat(roomId: Long, userId: Long)
 GET         /recently_messages/:roomId          controllers.Application.recentlyMessage(roomId: Long)
-GET         /room/:roomId/:userId/wspath        controllers.Application.pathToRoom(roomId: Long, userId: Long)
+GET         /room/:roomId/wspath                controllers.Application.pathToRoom(roomId: Long)
+GET         /room/:roomId/chat                  controllers.Application.chat(roomId: Long)
 
 
 GET         /assets/*file                       controllers.Assets.at(path="/public", file)

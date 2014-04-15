@@ -108,7 +108,7 @@ module Chat {
                 })
             })
 
-            $http.get("/room/" + $scope.roomId + "/" + $scope.userId + "/wspath").success((result) => {
+            $http.get("/room/" + $scope.roomId + "/wspath").success((result) => {
                 var chatSocket = new WebSocket(result.path)
 
                 chatSocket.onopen = () => {

@@ -49,13 +49,12 @@ object Application extends Controller with securesocial.core.SecureSocial {
     )
   }
 
-  def chat(roomId: Long, userId: Long) = WebSocket.async[JsValue] { request  =>
-    val user = Tables.Users.findById(userId)
+  def chat(roomId: Long) = WebSocket.async[JsValue] { implicit request  =>
     ChatRoom.join(roomId, user.get)
   }
 
-  def pathToRoom(roomId: Long, userId: Long) = SecuredAction { implicit rs =>
-    Ok(Json.toJson(Json.obj("path" -> routes.Application.chat(roomId, userId).webSocketURL())))
+  def pathToRoom(roomId: Long) = SecuredAction { implicit rs =>
+    Ok(Json.toJson(Json.obj("path" -> routes.Application.chat(roomId).webSocketURL())))
   }
 
   def recentlyMessage(roomId: Long) = SecuredAction { implicit request =>
