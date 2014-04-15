@@ -6,13 +6,16 @@
 	"bundle": "./d.ts/DefinitelyTyped/bundle.d.ts",
 	"installed": {
 		"jquery/jquery.d.ts": {
-			"commit": "b6a08def3bc87d24241ae26baf2a2fc6441256a7"
+			"commit": "a3456013ad809e78d8f1b8f1a7895fddff7c1028"
 		},
 		"angularjs/angular.d.ts": {
-			"commit": "b6a08def3bc87d24241ae26baf2a2fc6441256a7"
+			"commit": "a3456013ad809e78d8f1b8f1a7895fddff7c1028"
 		},
 		"angularjs/angular-route.d.ts": {
-			"commit": "b6a08def3bc87d24241ae26baf2a2fc6441256a7"
+			"commit": "a3456013ad809e78d8f1b8f1a7895fddff7c1028"
+		},
+		"notify.js/notify.js.d.ts": {
+			"commit": "a3456013ad809e78d8f1b8f1a7895fddff7c1028"
 		}
 	}
 }

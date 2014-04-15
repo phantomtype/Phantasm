@@ -1,6 +1,6 @@
 /// <reference path="../d.ts/DefinitelyTyped/jquery/jquery.d.ts" />
 /// <reference path="../d.ts/DefinitelyTyped/angularjs/angular.d.ts" />
-/// <reference path="./notify.js.d.ts" />
+/// <reference path="../d.ts/DefinitelyTyped/notify.js/notify.js.d.ts" />
 
 interface Room {
     id: number
