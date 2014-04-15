@@ -1,0 +1,21 @@
+# App name
+securesocial.appName=SecureSocial 2
+
+# Login page
+securesocial.login.title=Login
+securesocial.login.instructions=Use your existing account on one of the following networks to log in.
+securesocial.login.accessDenied=You denied access to your account. Please grant it to log in.
+securesocial.login.errorLoggingIn=An error occurred while logging you in. Please try again.
+securesocial.login.here=here
+
+# Not authorized page
+securesocial.notAuthorized.title=Not Authorized
+securesocial.notAuthorized.message=You are not authorized to access that page
+
+#
+securesocial.loginRequired=You need to log in to access that page.
+
+phantasm.main.logout=logout
+
+phantasm.date.pattern.short=M/d HH:mm
+phantasm.date.pattern.long=M/d/y HH:mm

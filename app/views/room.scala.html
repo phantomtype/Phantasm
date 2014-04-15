@@ -30,7 +30,7 @@
                     <img class="avatar" ng-src="{{msg.user.avatarUrl}}"/>
                     <span>{{msg.user.fullName}}</span>
                     <p>{{msg.comment.message}}</p>
-                    <p class="pull-right">{{msg.comment.created | date:'M月d日 HH:mm'}}</p>
+                    <p class="pull-right">{{msg.comment.created | date:'@Messages("phantasm.date.pattern.short")'}}</p>
                 </div>
             </div>
             <div class="talk">

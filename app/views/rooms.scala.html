@@ -16,7 +16,7 @@
             <tbody>
                 <tr ng-repeat="room in rooms" ng-click="openRoom(room)">
                     <td><a ng-href="/room/{{room.id}}">{{room.name}} <span ng-if="room.is_private"><span class="glyphicon glyphicon-star"></span></span></a></td>
-                    <td>{{room.latest_post.created | date:'yyyy/MM/dd HH:mm'}} <img class="avatar-small" ng-src="{{room.latest_post.user.avatarUrl}}" /></td>
+                    <td>{{room.latest_post.created | date:'@Messages("phantasm.date.pattern.long")'}} <img class="avatar-small" ng-src="{{room.latest_post.user.avatarUrl}}" /></td>
                     <td><img class="avatar-small" ng-src="{{room.owner.avatarUrl}}" /> {{room.owner.fullName}}</td>
                 </tr>
             </tbody>

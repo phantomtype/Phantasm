@@ -1,0 +1,21 @@
+# App name
+securesocial.appName=SecureSocial 2
+
+# Login page
+securesocial.login.title=ログイン
+securesocial.login.instructions=ログインに使用できるサービス一覧です。
+securesocial.login.accessDenied=このアカウントには権限がありません。
+securesocial.login.errorLoggingIn=ログインに失敗しました。もう1度お試しください。
+securesocial.login.here=こちら
+
+# Not authorized page
+securesocial.notAuthorized.title=認証されていません
+securesocial.notAuthorized.message=このページへアクセスするためには認証が必要です。
+
+#
+securesocial.loginRequired=このページへアクセスするためには認証が必要です。
+
+phantasm.main.logout=ログアウト
+
+phantasm.date.pattern.short=M月d日 HH:mm
+phantasm.date.pattern.long=y年M月d日 HH:mm
