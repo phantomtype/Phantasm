@@ -23,7 +23,7 @@ declare module notify {
         icon? : string;
         tag? : string;
         notifyShow? : Function;
-        nofityClose? : Function;
+        notifyClose? : Function;
         notifyClick? : Function;
         notifyError? : Function;
         permissionGranted? : Function;
