@@ -87,7 +87,7 @@ module Chat {
         needsPermission : boolean
         useNotification : boolean
         requestPermission: ()=> void
-        toggleNotification: ()=> void
+        setNotification: (boolean)=> void
         notify : notify.INotify
     }
 
@@ -128,7 +128,7 @@ module Chat {
                             $scope.messages.push(data)
 
                             if($scope.useNotification && data.user.id != $scope.userId) {
-                                var notify = new Notify("Phantasm", {body : data.comment.message});
+                                var notify = new Notify("Phantasm - " + data.user.fullName, {body : data.comment.message});
                                 notify.show();
                             }
                         } else {
@@ -164,7 +164,10 @@ module Chat {
                     $scope.useNotification = true
                 })
             }
-            $scope.toggleNotification = ()=> $scope.useNotification = !$scope.useNotification
+
+            $scope.setNotification = (value: boolean) => {
+                $scope.useNotification = value
+            }
         }
     }
 }

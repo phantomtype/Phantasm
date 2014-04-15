@@ -17,10 +17,10 @@
                         <button class="btn btn-link" ng-click="requestPermission()">Use Desktop notifications</button>
                     </div>
                     <div ng-if="!needsPermission">
-                        <button class="btn btn-link" ng-click="toggleNotification()">
-                            <span ng-if="useNotification">Enable Desktop notifications</span>
-                            <span ng-if="!useNotification">Disable  Desktop notifications</span>
-                        </button>
+                        <label class="nav">
+                            Desktop Notifications
+                            <input type="checkbox" ng-model="useNotification" ng-change="setNotification(useNotification)" />
+                        </label>
                     </div>
 
                 </div>
