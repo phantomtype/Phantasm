@@ -31,7 +31,6 @@ interface Comment {
     created: Date
 }
 
-
 module Rooms {
     export interface  Scope extends  ng.IScope {
         newRoom: Room
@@ -143,7 +142,7 @@ module Chat {
                     }
 
                     $scope.talk = (e:KeyboardEvent) => {
-                        if (e.charCode == 13 || e.keyCode == 13) {
+                        if ((e.charCode == 13 || e.keyCode == 13) && e.shiftKey) {
                             e.preventDefault()
                             chatSocket.send(JSON.stringify(
                                 {text: $scope.talkBody}
@@ -171,3 +170,10 @@ module Chat {
         }
     }
 }
+
+var app = angular.module('phantasm', ['hc.marked'])
+app.config(["marked", (marked) => {
+    marked.setOptions({gfm: true, breaks: true, sanitize: true})
+}])
+.controller("Rooms.Controller", Rooms.Controller)
+.controller("Chat.Controller", Chat.Controller)

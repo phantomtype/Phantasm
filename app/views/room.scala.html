@@ -29,12 +29,12 @@
                 <div class="message" ng-repeat="msg in messages">
                     <img class="avatar" ng-src="{{msg.user.avatarUrl}}"/>
                     <span>{{msg.user.fullName}}</span>
-                    <p>{{msg.comment.message}}</p>
+                    <div marked="msg.comment.message"></div>
                     <p class="pull-right">{{msg.comment.created | date:'@Messages("phantasm.date.pattern.short")'}}</p>
                 </div>
             </div>
             <div class="talk">
-                <textarea ng-keypress="talk($event)" ng-model="talkBody" class="form-control" rows="5" placeholder="input message here."></textarea>
+                <textarea ng-keypress="talk($event)" ng-model="talkBody" class="form-control" rows="5" placeholder="input message here. (Shift+Enter to send)"></textarea>
             </div>
         </div>
         <aside id="sidebar">

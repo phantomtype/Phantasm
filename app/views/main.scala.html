@@ -1,7 +1,7 @@
 @(title: String)(content: Html)(implicit flash: play.api.mvc.Flash, user:Option[models.User], request: RequestHeader)
 
 <!doctype html>
-<html ng-app>
+<html ng-app="phantasm">
 <head>
     <title>Phantasm @title</title>
     <link rel="stylesheet" media="screen" href='@routes.Assets.at("lib/bootstrap/css/bootstrap.css")'>
@@ -12,6 +12,8 @@
     <script type="text/javascript" src='@routes.Assets.at("lib/jquery/jquery.js")'></script>
     <script type="text/javascript" src='@routes.Assets.at("lib/bootstrap/js/bootstrap.js")'></script>
     <script type="text/javascript" src='@routes.Assets.at("lib/angular/angular.js")'></script>
+    <script type="text/javascript" src='@routes.Assets.at("lib/marked/lib/marked.js")'></script>
+    <script type="text/javascript" src='@routes.Assets.at("lib/angular-marked/angular-marked.js")'></script>
 </head>
 <body>
 <header class="navbar navbar-inverse navbar-fixed-top">
