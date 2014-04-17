@@ -97,7 +97,9 @@ module Chat {
                 result.reverse().forEach((message: Message) => {
                     $scope.messages.push(message)
                 })
-                $("div.messages").animate({ scrollTop: $("div.messages")[0].scrollHeight }, 1)
+                setTimeout(() => {
+                    $("div.messages").animate({ scrollTop: $("div.messages")[0].scrollHeight }, 1)
+                }, 50)
             })
 
             $scope.rooms = []
@@ -130,15 +132,15 @@ module Chat {
                                 var notify = new Notify("Phantasm - " + data.user.fullName, {body : data.comment.message});
                                 notify.show();
                             }
+
+                            $scope.$digest()
+                            $("div.messages").animate({ scrollTop: $("div.messages")[0].scrollHeight }, 'fast')
                         } else {
                             $scope.members = []
                             data.members.forEach((member:Member) => {
                                 $scope.members.push(member)
                             })
                         }
-
-                        $scope.$digest()
-                        $("div.messages").animate({ scrollTop: $("div.messages")[0].scrollHeight }, 'fast')
                     }
 
                     $scope.talk = (e:KeyboardEvent) => {
