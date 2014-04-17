@@ -1,0 +1,30 @@
+@()(implicit flash: play.api.mvc.Flash, user:Option[models.User], request: RequestHeader)
+
+@import controllers._
+
+@main("account: " + user.get.fullName) {
+
+    <div class="page-header"></div>
+    <div ng-controller="Account.Controller">
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="userSetting.desktopNotifications"> Desktop Notifications
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary" ng-click="save()">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+<script type='text/javascript' src='@routes.Assets.at("js/chat.js")'></script>
+
+}

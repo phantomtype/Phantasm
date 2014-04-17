@@ -15,7 +15,8 @@ securesocial.notAuthorized.message=You are not authorized to access that page
 #
 securesocial.loginRequired=You need to log in to access that page.
 
-phantasm.main.logout=logout
+phantasm.main.logout=Logout
+phantasm.main.account=Account
 
 phantasm.date.pattern.short=M/d HH:mm
 phantasm.date.pattern.long=M/d/y HH:mm

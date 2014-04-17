@@ -24,7 +24,16 @@ case class User(uid: Option[Long] = None,
                 authMethod: AuthenticationMethod,
                 oAuth1Info: Option[OAuth1Info],
                 oAuth2Info: Option[OAuth2Info],
-                passwordInfo: Option[PasswordInfo] = None) extends Identity
+                passwordInfo: Option[PasswordInfo] = None) extends Identity {
+
+  def userSetting(): Option[UserSetting] = {
+    Tables.UserSettings.findBy(this)
+  }
+
+  def saveUserSetting(desktopNotifications: Boolean): Unit = {
+    Tables.UserSettings.saveUserSetting(this, desktopNotifications)
+  }
+}
 
 
 object UserFromIdentity {
@@ -177,6 +186,17 @@ class Tokens(tag: Tag) extends Table[Token](tag, "token") {
         }
     })
   }
+}
+
+case class UserSetting(id: Option[Long], user_id: Long, desktopNotifications: Boolean, created: DateTime, updated: DateTime)
+class UserSettings(tag: Tag) extends Table[UserSetting](tag, "user_settings") {
+  def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+  def userId = column[Long]("userId", O.NotNull)
+  def desktopNotifications = column[Boolean]("desktop_notifications", O.NotNull)
+  def created = column[DateTime]("created", O.NotNull)
+  def updated = column[DateTime]("updated", O.NotNull)
+
+  def * = (id.?, userId, desktopNotifications, created, updated) <> (UserSetting.tupled, UserSetting.unapply)
 }
 
 case class Room(id: Option[Long], ownerId: Long, name: String, isPrivate: Boolean, created: DateTime) {
@@ -386,4 +406,26 @@ object Tables extends WithDefaultSession {
   val RoomUsers = TableQuery[RoomUsers](new RoomUsers(_))
 
   val Comments = TableQuery[Comments](new Comments(_))
+
+  val UserSettings = new TableQuery[UserSettings](new UserSettings(_)) {
+    def findBy(user: User): Option[UserSetting] = withSession { implicit session =>
+      val q = for {
+        userSetting <- this
+        if (userSetting.userId is user.uid.get)
+      } yield userSetting
+
+      q.firstOption
+    }
+
+    def saveUserSetting(user: User, desktopNotifications: Boolean): Unit = withSession { implicit session =>
+      findBy(user) match {
+        case Some(setting) =>
+          val new_setting = setting.copy(desktopNotifications = desktopNotifications, updated = DateTime.now)
+          this.update(new_setting)
+        case None =>
+          val setting = UserSetting(None, user.uid.get, desktopNotifications, DateTime.now, DateTime.now)
+          this.insert(setting)
+      }
+    }
+  }
 }

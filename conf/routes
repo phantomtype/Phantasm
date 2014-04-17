@@ -6,6 +6,9 @@ GET         /room/:id                           controllers.Application.room(id:
 GET         /recently_messages/:roomId          controllers.Application.recentlyMessage(roomId: Long)
 GET         /room/:roomId/wspath                controllers.Application.pathToRoom(roomId: Long)
 GET         /room/:roomId/chat                  controllers.Application.chat(roomId: Long)
+GET         /account                            controllers.Application.account()
+GET         /account/user_setting               controllers.Application.user_setting()
+POST        /account/save                       controllers.Application.saveAccount()
 
 
 GET         /assets/*file                       controllers.Assets.at(path="/public", file)

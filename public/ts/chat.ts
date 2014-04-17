@@ -23,12 +23,46 @@ interface Member {
     avatarUrl: string
     firstName: string
     fullName:   string
+    userSetting: UserSetting
 }
 
 interface Comment {
     user: Member
     message: string
     created: Date
+}
+
+interface UserSetting {
+    id: number
+    user_id: number
+    desktopNotifications: boolean
+}
+
+module Account {
+    export interface  Scope extends  ng.IScope {
+        userSetting: UserSetting
+        get: () => void
+        save: () => void
+    }
+
+    export class Controller {
+        constructor($scope: Scope, $http:ng.IHttpService) {
+            $scope.get = () => {
+                $http.get("/account/user_setting").success((data: any) => {
+                    if (data != "null") {
+                        $scope.userSetting = data
+                    }
+                })
+            }
+            $scope.get()
+
+            $scope.save = () => {
+                $http.post("/account/save", $scope.userSetting).success((data) => {
+                    alert("save changed!")
+                })
+            }
+        }
+    }
 }
 
 module Rooms {
@@ -82,6 +116,8 @@ module Chat {
         talk: (KeyboardEvent) => void
         members: Member[]
         rooms: Room[]
+        userSetting: UserSetting
+
         isSupportedNotification : boolean
         needsPermission : boolean
         useNotification : boolean
@@ -156,7 +192,15 @@ module Chat {
                 }
             })
 
-            $scope.useNotification = false;
+            $http.get("/account/user_setting").success((data: any) => {
+                if (data != "null") {
+                    $scope.userSetting = data
+                    $scope.useNotification = $scope.userSetting.desktopNotifications
+                } else {
+                    $scope.useNotification = false
+                }
+            })
+
             $scope.isSupportedNotification = Notify.isSupported()
             $scope.needsPermission = Notify.needsPermission()
 
@@ -179,3 +223,4 @@ app.config(["marked", (marked) => {
 }])
 .controller("Rooms.Controller", Rooms.Controller)
 .controller("Chat.Controller", Chat.Controller)
+.controller("Account.Controller", Account.Controller)

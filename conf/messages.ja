@@ -16,6 +16,7 @@ securesocial.notAuthorized.message=このページへアクセスするために
 securesocial.loginRequired=このページへアクセスするためには認証が必要です。
 
 phantasm.main.logout=ログアウト
+phantasm.main.account=アカウント
 
 phantasm.date.pattern.short=M月d日 HH:mm
 phantasm.date.pattern.long=y年M月d日 HH:mm

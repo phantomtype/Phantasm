@@ -6,7 +6,7 @@ import service.RoomService
 import models._
 import play.api.mvc.WebSocket
 import scala.Some
-import play.api.libs.json.{JsValue, Writes, Json}
+import play.api.libs.json.{JsNull, JsValue, Writes, Json}
 import models.JsonWrites._
 import play.api.data.Form
 import play.api.data.Forms._
@@ -27,6 +27,28 @@ object Application extends Controller with securesocial.core.SecureSocial {
 
   def index = UserAwareAction { implicit rs =>
     Ok(views.html.rooms())
+  }
+
+  def account = SecuredAction { implicit rs =>
+    Ok(views.html.account())
+  }
+
+  def user_setting = SecuredAction { implicit rs =>
+    val setting: JsValue = user.get.userSetting match {
+      case Some(s) => Json.toJson(s)
+      case None => JsNull
+    }
+    Ok(Json.toJson(setting))
+  }
+
+  def saveAccount = SecuredAction { implicit rs =>
+    Form(("desktopNotifications" -> boolean)).bindFromRequest.fold(
+      errors => BadRequest,
+      (form) => {
+        user.get.saveUserSetting(desktopNotifications = form)
+        NoContent
+      }
+    )
   }
 
   def room(id: Long) = SecuredAction { implicit rs =>
