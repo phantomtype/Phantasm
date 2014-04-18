@@ -6,12 +6,15 @@ import scala.slick.lifted.ProvenShape
 
 import securesocial.core.Identity
 import securesocial.core.OAuth1Info
-import com.github.tototoshi.slick.MySQLJodaSupport._
 
 import securesocial.core.providers.Token
 
 import org.joda.time.DateTime
+import com.github.tototoshi.slick
 
+object MyDriver extends slick.GenericJodaSupport(play.api.db.slick.Config.driver)
+
+import MyDriver._
 
 class Users(tag: Tag) extends Table[User](tag, "user") {
 
