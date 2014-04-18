@@ -2,7 +2,6 @@ package controllers
 
 import play.api.mvc.{Action, RequestHeader, Controller}
 import securesocial.core.{SecuredRequest, SecureSocial, Identity}
-import service.RoomService
 import models._
 import play.api.mvc.WebSocket
 import scala.Some
@@ -52,7 +51,7 @@ object Application extends Controller with securesocial.core.SecureSocial {
   }
 
   def room(id: Long) = SecuredAction { implicit rs =>
-    RoomService.findRoom(id) match {
+    Tables.Rooms.findRoom(id) match {
       case Some(room) =>
         Ok(views.html.room(room))
       case None =>
@@ -65,7 +64,7 @@ object Application extends Controller with securesocial.core.SecureSocial {
       errors => BadRequest,
       (form) => {
         val room = Room(None, user.get.uid.get, form._1, form._2, DateTime.now)
-        RoomService.createRoom(room)
+        Tables.Rooms.createRoom(room)
         NoContent
       }
     )
@@ -80,14 +79,14 @@ object Application extends Controller with securesocial.core.SecureSocial {
   }
 
   def recentlyMessage(roomId: Long) = SecuredAction { implicit request =>
-    val messages = RoomService.recent_comments(roomId, 20).map { t =>
+    val messages = Tables.Rooms.recent_comments(roomId, 20).map { t =>
       TalkMessage("talk", t._2, t._1)
     }
     Ok(Json.toJson(messages))
   }
 
   def rooms = SecuredAction { implicit rs =>
-    Ok(Json.toJson(RoomService.all))
+    Ok(Json.toJson(Tables.Rooms.all))
   }
 
 }

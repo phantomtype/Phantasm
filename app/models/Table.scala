@@ -11,7 +11,6 @@ import com.github.tototoshi.slick.MySQLJodaSupport._
 import securesocial.core.providers.Token
 
 import org.joda.time.DateTime
-import service.RoomService
 
 
 case class User(uid: Option[Long] = None,
@@ -210,7 +209,7 @@ case class Room(id: Option[Long], ownerId: Long, name: String, isPrivate: Boolea
   }
 
   def latest_post: Option[Comment] = {
-    RoomService.recent_comments(this.id.get, 1).headOption match {
+    Tables.Rooms.recent_comments(this.id.get, 1).headOption match {
       case Some(comment) =>
         Some(comment._1)
       case None =>
@@ -308,7 +307,7 @@ object Tables extends WithDefaultSession {
         }
     }
 
-    def delete(uuid:String) = withSession {
+    def delete(uuid: String) = withSession {
       implicit session =>
         val q = for {
           t <- this
@@ -318,7 +317,7 @@ object Tables extends WithDefaultSession {
         q.delete
     }
 
-    def deleteExpiredTokens(currentDate:DateTime) = withSession {
+    def deleteExpiredTokens(currentDate: DateTime) = withSession {
       implicit session =>
         val q = for {
           t <- this
@@ -343,7 +342,7 @@ object Tables extends WithDefaultSession {
         q.firstOption
     }
 
-    def findByEmailAndProvider(email:String, providerId:String) : Option[User] = withSession {
+    def findByEmailAndProvider(email: String, providerId: String): Option[User] = withSession {
       implicit session =>
         val q = for {
           user <- this
@@ -396,16 +395,74 @@ object Tables extends WithDefaultSession {
 
   }
 
-  val Rooms = new TableQuery[Rooms](new Rooms(_)) {
-    def createComment(comment: Comment): Comment = withSession { implicit  session =>
-      Tables.Comments.insert(comment)
-      comment
-    }
-  }
 
   val RoomUsers = TableQuery[RoomUsers](new RoomUsers(_))
 
   val Comments = TableQuery[Comments](new Comments(_))
+
+  val Rooms = new TableQuery[Rooms](new Rooms(_)) {
+    def createComment(comment: Comment): Comment = withSession {
+      implicit session =>
+        Tables.Comments.insert(comment)
+        comment
+    }
+
+    def all(): Seq[Room] = withSession {
+      implicit session =>
+        val q = for {
+          (room) <- this
+        } yield room
+
+        q.list()
+    }
+
+    def findRoom(id: Long): Option[Room] = withSession {
+      implicit session =>
+        val q = for {
+          (room) <- this if room.id is id
+        } yield room
+
+        q.firstOption
+    }
+
+    def findJoinedRooms(u: User): List[Room] = withSession {
+      implicit session =>
+        val q = for {
+          (room, roomUser) <- this leftJoin Tables.RoomUsers on (_.id === _.roomId)
+          (roomUser, user) <- Tables.RoomUsers leftJoin Tables.Users on (_.userId === _.uid)
+          if roomUser.userId is u.uid
+        } yield room
+
+        q.list()
+    }
+
+    def findOwnedRooms(u: User): List[Room] = withSession {
+      implicit session =>
+        val q = for {
+          (room) <- this
+          if room.ownerId is u.uid
+        } yield room
+
+        q.list()
+    }
+
+    def createRoom(room: Room): Long = withSession {
+      implicit session =>
+        val roomId = this.insert(room)
+        val roomUser = RoomUser(None, room.ownerId, roomId, DateTime.now)
+        Tables.RoomUsers.insert(roomUser)
+        roomId
+    }
+
+    def recent_comments(roomId: Long, size: Int): Seq[(Comment, User)] = withSession {
+      implicit session =>
+        val q = for {
+          comment <- Tables.Comments if comment.roomId is roomId
+          user <- Tables.Users if comment.userId === user.uid
+        } yield (comment, user)
+        q.sortBy(_._1.created.desc).take(size).list
+    }
+  }
 
   val UserSettings = new TableQuery[UserSettings](new UserSettings(_)) {
     def findBy(user: User): Option[UserSetting] = withSession { implicit session =>

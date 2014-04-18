@@ -14,7 +14,6 @@ import akka.pattern.ask
 import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits._
 import scala.collection.mutable
-import service.RoomService
 import models.JsonWrites._
 
 object ChatRoom {
@@ -56,7 +55,7 @@ object ChatRoom {
 class ChatRoom(roomId: Long) extends Actor {
   var members = Set.empty[User]
   val (chatEnumerator, chatChannel) = Concurrent.broadcast[JsValue]
-  val room = RoomService.findRoom(roomId).get
+  val room = Tables.Rooms.findRoom(roomId).get
 
   def receive = {
 
