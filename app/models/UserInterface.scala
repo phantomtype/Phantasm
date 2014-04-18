@@ -8,13 +8,18 @@ case class UpdateMembers(kind: String, user: User, members: Set[User]) extends M
 
 object JsonWrites {
 
-  implicit val implicitUserSettingWrites = new Writes[UserSetting] {
-    def writes(userSetting: UserSetting): JsValue = {
-      Json.obj(
-        "id" -> userSetting.id,
-        "user_id" -> userSetting.user_id,
-        "desktopNotifications" -> userSetting.desktopNotifications
-      )
+  implicit val implicitUserSettingWrites = new Writes[Option[UserSetting]] {
+    def writes(userSetting: Option[UserSetting]): JsValue = {
+      userSetting match {
+        case Some(s) =>
+          Json.obj(
+            "id" -> s.id,
+            "user_id" -> s.user_id,
+            "desktopNotifications" -> s.desktopNotifications
+          )
+        case None =>
+          Json.obj()
+      }
     }
   }
 

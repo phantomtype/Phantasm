@@ -49,9 +49,7 @@ module Account {
         constructor($scope: Scope, $http:ng.IHttpService) {
             $scope.get = () => {
                 $http.get("/account/user_setting").success((data: any) => {
-                    if (data != "null") {
-                        $scope.userSetting = data
-                    }
+                   $scope.userSetting = data
                 })
             }
             $scope.get()

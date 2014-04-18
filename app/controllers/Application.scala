@@ -33,11 +33,7 @@ object Application extends Controller with securesocial.core.SecureSocial {
   }
 
   def user_setting = SecuredAction { implicit rs =>
-    val setting: JsValue = user.get.userSetting match {
-      case Some(s) => Json.toJson(s)
-      case None => JsNull
-    }
-    Ok(Json.toJson(setting))
+    Ok(Json.toJson(user.get.userSetting()))
   }
 
   def saveAccount = SecuredAction { implicit rs =>
