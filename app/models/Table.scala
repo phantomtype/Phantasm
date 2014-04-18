@@ -13,33 +13,6 @@ import securesocial.core.providers.Token
 import org.joda.time.DateTime
 
 
-case class User(uid: Option[Long] = None,
-                identityId: IdentityId,
-                firstName: String,
-                lastName: String,
-                fullName: String,
-                email: Option[String],
-                avatarUrl: Option[String],
-                authMethod: AuthenticationMethod,
-                oAuth1Info: Option[OAuth1Info],
-                oAuth2Info: Option[OAuth2Info],
-                passwordInfo: Option[PasswordInfo] = None) extends Identity {
-
-  def userSetting(): Option[UserSetting] = {
-    Tables.UserSettings.findBy(this)
-  }
-
-  def saveUserSetting(desktopNotifications: Boolean): Unit = {
-    Tables.UserSettings.saveUserSetting(this, desktopNotifications)
-  }
-}
-
-
-object UserFromIdentity {
-  def apply(i: Identity): User = User(None, i.identityId, i.firstName, i.lastName, i.fullName,
-    i.email, i.avatarUrl, i.authMethod, i.oAuth1Info, i.oAuth2Info)
-}
-
 class Users(tag: Tag) extends Table[User](tag, "user") {
 
   implicit def string2AuthenticationMethod = MappedColumnType.base[AuthenticationMethod, String](
@@ -187,7 +160,6 @@ class Tokens(tag: Tag) extends Table[Token](tag, "token") {
   }
 }
 
-case class UserSetting(id: Option[Long], user_id: Long, desktopNotifications: Boolean, created: DateTime, updated: DateTime)
 class UserSettings(tag: Tag) extends Table[UserSetting](tag, "user_settings") {
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def userId = column[Long]("userId", O.NotNull)
@@ -198,25 +170,6 @@ class UserSettings(tag: Tag) extends Table[UserSetting](tag, "user_settings") {
   def * = (id.?, userId, desktopNotifications, created, updated) <> (UserSetting.tupled, UserSetting.unapply)
 }
 
-case class Room(id: Option[Long], ownerId: Long, name: String, isPrivate: Boolean, created: DateTime) {
-  def createComment(user: User, text: String): Comment = {
-    val comment = Comment(None, user.uid.get, id.get, text, DateTime.now)
-    Tables.Rooms.createComment(comment)
-  }
-
-  def owner: User = {
-    Tables.Users.findById(ownerId).get
-  }
-
-  def latest_post: Option[Comment] = {
-    Tables.Rooms.recent_comments(this.id.get, 1).headOption match {
-      case Some(comment) =>
-        Some(comment._1)
-      case None =>
-        None
-    }
-  }
-}
 class Rooms(tag: Tag) extends Table[Room](tag, "rooms") {
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def ownerId = column[Long]("ownerId", O.NotNull)
@@ -227,11 +180,6 @@ class Rooms(tag: Tag) extends Table[Room](tag, "rooms") {
   def * = (id.?, ownerId, name, isPrivate, created) <> (Room.tupled, Room.unapply)
 }
 
-case class Comment(id: Option[Long], userId: Long, roomId: Long, message: String, created: DateTime) {
-  def user: User = {
-    Tables.Users.findById(userId).get
-  }
-}
 class Comments(tag: Tag) extends Table[Comment](tag, "comments") {
   def id      = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def userId  = column[Long]("userId", O.NotNull)
@@ -242,7 +190,6 @@ class Comments(tag: Tag) extends Table[Comment](tag, "comments") {
   def * = (id.?, userId, roomId, message, created) <> (Comment.tupled, Comment.unapply)
 }
 
-case class RoomUser(id: Option[Long], userId: Long, roomId: Long, created: DateTime)
 class RoomUsers(tag: Tag) extends Table[RoomUser](tag, "room_users") {
   def id      = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def userId  = column[Long]("userId", O.NotNull)
