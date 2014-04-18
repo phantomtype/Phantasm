@@ -1,8 +1,8 @@
-@(loginForm: Form[(String,String)], errorMsg: Option[String] = None)(implicit request: RequestHeader, user: Option[securesocial.core.Identity] = None)
+@(loginForm: Form[(String,String)], errorMsg: Option[String] = None)(implicit request: RequestHeader, user: Option[models.User] = None)
 
 @import securesocial.core.Registry
 
-@loginfree(Messages("securesocial.login.title")) {
+@main(Messages("securesocial.login.title"), require_login = false) {
     <div class="page-header"></div>
 
     <div class="page-header">

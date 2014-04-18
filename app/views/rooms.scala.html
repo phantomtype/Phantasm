@@ -1,6 +1,6 @@
 @()(implicit flash: play.api.mvc.Flash, user:Option[models.User], request: RequestHeader)
 
-@main("rooms") {
+@main("rooms", require_login = true) {
 
     <div id="rooms" ng-controller="Rooms.Controller">
         <h2>Rooms index</h2>
