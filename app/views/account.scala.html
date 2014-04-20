@@ -2,7 +2,7 @@
 
 @import controllers._
 
-@main("account: " + user.get.fullName, require_login = true) {
+@main("account: " + user.get.fullName) {
 
     <div class="page-header"></div>
     <div ng-controller="Account.Controller">

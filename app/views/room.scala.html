@@ -2,7 +2,7 @@
 
 @import controllers._
 
-@main(room.name, require_login = true) {
+@main(room.name) {
 
 <div id="chatContent" ng-init="roomId = @room.id; userId = @user.get.uid.get">
     <div id="onChat" class="" ng-controller="Chat.Controller">

@@ -24,7 +24,7 @@ object Application extends Controller with securesocial.core.SecureSocial {
     }
   }
 
-  def index = UserAwareAction { implicit rs =>
+  def index = SecuredAction { implicit rs =>
     Ok(views.html.rooms())
   }
 

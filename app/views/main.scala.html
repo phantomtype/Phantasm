@@ -1,4 +1,4 @@
-@(title: String, require_login: Boolean)(content: Html)(implicit user:Option[models.User], request: RequestHeader)
+@(title: String)(content: Html)(implicit user:Option[models.User], request: RequestHeader)
 
 <!doctype html>
 <html ng-app="phantasm">
@@ -45,16 +45,7 @@
 </header>
 
 <div class="container">
-    @if(user.isDefined || !require_login) {
-        @content
-    } else {
-        <div class="page-header"></div>
-        <div class="row">
-            <div class="col-md-3">
-                please <a href="/login">login</a>.
-            </div>
-        </div>
-    }
+    @content
 </div>
 </body>
 </html>
