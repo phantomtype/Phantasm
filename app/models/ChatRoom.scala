@@ -38,7 +38,7 @@ object ChatRoom {
 
       case Connected(enumerator) =>
         val iteratee = Iteratee.foreach[JsValue] { event =>
-          room(roomId) ! Talk(user, (event \ "text").as[String])
+          room(roomId) ! Talk(user, (event \ "text").as[String], (event \ "replyTo").as[Option[Long]])
         }.map { _ =>
           room(roomId) ! Quit(user)
         }
@@ -72,8 +72,8 @@ class ChatRoom(roomId: Long) extends Actor {
       val msg = UpdateMembers("join", user, members)
       notifyAll(msg)
 
-    case Talk(user, text) =>
-      val comment = room.createComment(user, text)
+    case Talk(user, text, replyTo) =>
+      val comment = room.createComment(user, text, replyTo)
       val msg = TalkMessage("talk", user, comment)
       notifyAll(msg)
 
@@ -90,7 +90,7 @@ class ChatRoom(roomId: Long) extends Actor {
 
 case class Join(user: User)
 case class Quit(user: User)
-case class Talk(user: User, text: String)
+case class Talk(user: User, text: String, replyTo: Option[Long])
 case class NotifyJoin(user: User)
 
 case class Connected(enumerator:Enumerator[JsValue])

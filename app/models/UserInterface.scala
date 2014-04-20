@@ -37,7 +37,9 @@ object JsonWrites {
   implicit val implicitCommentWrites = new Writes[Comment] {
     def writes(comment: Comment): JsValue = {
       Json.obj(
+        "id" -> comment.id,
         "user" -> comment.user,
+        "replyTo" -> comment.replyTo,
         "message" -> comment.message,
         "created" -> comment.created
       )

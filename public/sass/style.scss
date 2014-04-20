@@ -49,8 +49,14 @@ body {
                 {
                     border-bottom: 1px solid #ccc;
                     padding: 15px 0;
+
+                    .message-operation {
+                      color: #CCCCCC;
+                      margin: 0 15px;
+                    }
                 }
             }
+
             .talk {
                 display: flex;
                 margin: 5px 5px 20px 5px;
@@ -95,3 +101,7 @@ img.avatar-small {
     padding-bottom: 0;
 }
 
+.link:hover {
+   text-decoration: underline;
+   cursor: pointer;
+}

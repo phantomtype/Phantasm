@@ -36,8 +36,8 @@ object UserFromIdentity {
 case class UserSetting(id: Option[Long], user_id: Long, desktopNotifications: Boolean, created: DateTime, updated: DateTime)
 
 case class Room(id: Option[Long], ownerId: Long, name: String, isPrivate: Boolean, created: DateTime) {
-  def createComment(user: User, text: String): Comment = {
-    val comment = Comment(None, user.uid.get, id.get, text, DateTime.now)
+  def createComment(user: User, text: String, replyTo: Option[Long]): Comment = {
+    val comment = Comment(None, user.uid.get, id.get, text, replyTo, DateTime.now)
     Tables.Rooms.createComment(comment)
   }
 
@@ -55,7 +55,7 @@ case class Room(id: Option[Long], ownerId: Long, name: String, isPrivate: Boolea
   }
 }
 
-case class Comment(id: Option[Long], userId: Long, roomId: Long, message: String, created: DateTime) {
+case class Comment(id: Option[Long], userId: Long, roomId: Long, message: String, replyTo: Option[Long], created: DateTime) {
   def user: User = {
     Tables.Users.findById(userId).get
   }

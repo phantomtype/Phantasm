@@ -31,10 +31,11 @@
                     <span>{{msg.user.fullName}}</span>
                     <div marked="msg.comment.message"></div>
                     <p class="pull-right">{{msg.comment.created | date:'@Messages("phantasm.date.pattern.short")'}}</p>
+                    <span class="pull-right message-operation link" ng-click="reply(msg)">reply</span>
                 </div>
             </div>
             <div class="talk">
-                <textarea ng-keypress="talk($event)" ng-model="talkBody" class="form-control" rows="5" placeholder="input message here. (Shift+Enter to send)"></textarea>
+                <textarea ng-keypress="talk($event)" ng-model="talkBody" id="talkBody" class="form-control" rows="5" placeholder="input message here. (Shift+Enter to send)"></textarea>
             </div>
         </div>
         <aside id="sidebar">

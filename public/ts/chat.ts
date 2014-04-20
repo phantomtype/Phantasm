@@ -27,6 +27,7 @@ interface Member {
 }
 
 interface Comment {
+    id: number
     user: Member
     message: string
     created: Date
@@ -112,6 +113,8 @@ module Chat {
         messages: Message[]
         talkBody: String
         talk: (KeyboardEvent) => void
+        reply: (msg: Message) => void
+        replyTo: number
         members: Member[]
         rooms: Room[]
         userSetting: UserSetting
@@ -125,6 +128,7 @@ module Chat {
 
     export class Controller {
         constructor($scope:Scope, $http:ng.IHttpService) {
+            $scope.replyTo = null
             $scope.messages = []
             $http.get("/recently_messages/" + $scope.roomId).success((result) => {
                 result.reverse().forEach((message: Message) => {
@@ -176,13 +180,19 @@ module Chat {
                         }
                     }
 
+                    $scope.reply = (message: Message) => {
+                        $scope.talkBody = "> " + message.comment.message.split("\n").join("\n> ") + "\n\n"
+                        $scope.replyTo = message.comment.id
+                        $("#talkBody").focus()
+                        $scope.$digest()
+                    }
+
                     $scope.talk = (e:KeyboardEvent) => {
                         if ((e.charCode == 13 || e.keyCode == 13) && (e.shiftKey || detectmob())) {
                             e.preventDefault()
-                            chatSocket.send(JSON.stringify(
-                                {text: $scope.talkBody}
-                            ))
+                            chatSocket.send(JSON.stringify({text: $scope.talkBody, replyTo: $scope.replyTo}))
                             $scope.talkBody = ""
+                            $scope.replyTo = null
                             $("div.messages").animate({ scrollTop: $("div.messages")[0].scrollHeight }, 'fast')
                         }
                     }

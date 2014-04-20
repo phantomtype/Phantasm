@@ -184,13 +184,15 @@ class Rooms(tag: Tag) extends Table[Room](tag, "rooms") {
 }
 
 class Comments(tag: Tag) extends Table[Comment](tag, "comments") {
+
   def id      = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def userId  = column[Long]("userId", O.NotNull)
   def roomId  = column[Long]("roomId", O.NotNull)
   def message = column[String]("comment", O.NotNull)
+  def replyTo = column[Long]("replyTo", O.Nullable)
   def created = column[DateTime]("created", O.NotNull)
 
-  def * = (id.?, userId, roomId, message, created) <> (Comment.tupled, Comment.unapply)
+  def * = (id.?, userId, roomId, message, replyTo.?, created) <> (Comment.tupled, Comment.unapply)
 }
 
 class RoomUsers(tag: Tag) extends Table[RoomUser](tag, "room_users") {
@@ -353,8 +355,8 @@ object Tables extends WithDefaultSession {
   val Rooms = new TableQuery[Rooms](new Rooms(_)) {
     def createComment(comment: Comment): Comment = withSession {
       implicit session =>
-        Tables.Comments.insert(comment)
-        comment
+        val newId = (Tables.Comments returning Tables.Comments.map(_.id)) += comment
+        comment.copy(id = Some(newId))
     }
 
     def all(): Seq[Room] = withSession {
