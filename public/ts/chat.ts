@@ -163,7 +163,7 @@ module Chat {
                             $scope.messages.push(data)
 
                             if($scope.useNotification && data.user.id != $scope.userId) {
-                                var notify = new Notify("Phantasm - " + data.user.fullName, {body : data.comment.message});
+                                var notify = new Notify("Phantasm - " + data.user.fullName, {body : data.comment.message, icon: data.user.avatarUrl});
                                 notify.show();
                             }
 
