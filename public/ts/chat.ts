@@ -118,7 +118,6 @@ module Chat {
 
         isSupportedNotification : boolean
         needsPermission : boolean
-        useNotification : boolean
         requestPermission: ()=> void
         setNotification: (boolean)=> void
         notify : notify.INotify
@@ -162,7 +161,7 @@ module Chat {
                         if (data.kind == "talk") {
                             $scope.messages.push(data)
 
-                            if($scope.useNotification && data.user.id != $scope.userId) {
+                            if($scope.userSetting.desktopNotifications && data.user.id != $scope.userId) {
                                 var notify = new Notify("Phantasm - " + data.user.fullName, {body : data.comment.message, icon: data.user.avatarUrl});
                                 notify.show();
                             }
@@ -190,13 +189,8 @@ module Chat {
                 }
             })
 
-            $http.get("/account/user_setting").success((data: any) => {
-                if (data != "null") {
-                    $scope.userSetting = data
-                    $scope.useNotification = $scope.userSetting.desktopNotifications
-                } else {
-                    $scope.useNotification = false
-                }
+            $http.get("/account/user_setting").success((data: UserSetting) => {
+                $scope.userSetting = data
             })
 
             $scope.isSupportedNotification = Notify.isSupported()
@@ -204,12 +198,12 @@ module Chat {
 
             $scope.requestPermission = () => {
                 Notify.requestPermission(()=> {
-                    $scope.useNotification = true
+                    $scope.userSetting.desktopNotifications = true
                 })
             }
 
             $scope.setNotification = (value: boolean) => {
-                $scope.useNotification = value
+                $scope.userSetting.desktopNotifications = value
             }
         }
     }
