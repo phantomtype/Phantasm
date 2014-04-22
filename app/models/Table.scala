@@ -417,20 +417,24 @@ object Tables extends WithDefaultSession {
   }
 
   val UserSettings = new TableQuery[UserSettings](new UserSettings(_)) {
-    def findBy(user: User): Option[UserSetting] = withSession { implicit session =>
+    def query(user: User): Query[UserSettings, UserSetting] = {
       val q = for {
         userSetting <- this
         if (userSetting.userId is user.uid.get)
       } yield userSetting
+      q
+    }
 
-      q.firstOption
+    def findBy(user: User): Option[UserSetting] = withSession { implicit session =>
+      query(user).firstOption
     }
 
     def saveUserSetting(user: User, desktopNotifications: Boolean): Unit = withSession { implicit session =>
       findBy(user) match {
         case Some(setting) =>
           val new_setting = setting.copy(desktopNotifications = desktopNotifications, updated = DateTime.now)
-          this.update(new_setting)
+          query(user).update(new_setting)
+
         case None =>
           val setting = UserSetting(None, user.uid.get, desktopNotifications, DateTime.now, DateTime.now)
           this.insert(setting)
