@@ -350,7 +350,15 @@ object Tables extends WithDefaultSession {
 
   val RoomUsers = TableQuery[RoomUsers](new RoomUsers(_))
 
-  val Comments = TableQuery[Comments](new Comments(_))
+  val Comments = new TableQuery[Comments](new Comments(_)) {
+    def findById(id: Long): Option[Comment] = withSession { implicit session =>
+      val q = for {
+        (comment) <- this if comment.id is id
+      } yield comment
+
+      q.firstOption
+    }
+  }
 
   val Rooms = new TableQuery[Rooms](new Rooms(_)) {
     def createComment(comment: Comment): Comment = withSession {

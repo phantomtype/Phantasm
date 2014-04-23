@@ -29,6 +29,7 @@ interface Member {
 interface Comment {
     id: number
     user: Member
+    replyTo: Comment
     message: string
     created: Date
 }
@@ -114,7 +115,8 @@ module Chat {
         talkBody: String
         talk: (KeyboardEvent) => void
         reply: (msg: Message) => void
-        replyTo: number
+        replyCancel: () => void
+        replyTo: Comment
         members: Member[]
         rooms: Room[]
         userSetting: UserSetting
@@ -185,16 +187,21 @@ module Chat {
                     }
 
                     $scope.reply = (message: Message) => {
-                        $scope.talkBody = "> " + message.comment.message.split("\n").join("\n> ") + "\n\n"
-                        $scope.replyTo = message.comment.id
+                        $scope.replyTo = message.comment
                         $("#talkBody").focus()
-                        $scope.$digest()
+                    }
+
+                    $scope.replyCancel = () => {
+                        $scope.replyTo = null
                     }
 
                     $scope.talk = (e:KeyboardEvent) => {
                         if ((e.charCode == 13 || e.keyCode == 13) && (e.shiftKey || detectmob())) {
                             e.preventDefault()
-                            chatSocket.send(JSON.stringify({text: $scope.talkBody, replyTo: $scope.replyTo}))
+                            chatSocket.send(JSON.stringify({
+                                text: $scope.talkBody,
+                                replyTo: $scope.replyTo == null ? null : $scope.replyTo.id
+                            }))
                             $scope.talkBody = ""
                             $scope.replyTo = null
                             $("div.messages").animate({ scrollTop: $("div.messages")[0].scrollHeight }, 'fast')

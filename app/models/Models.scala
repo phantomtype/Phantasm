@@ -59,6 +59,15 @@ case class Comment(id: Option[Long], userId: Long, roomId: Long, message: String
   def user: User = {
     Tables.Users.findById(userId).get
   }
+
+  def reply_to: Option[Comment] = {
+    replyTo match {
+      case Some(id) =>
+        Tables.Comments.findById(replyTo.get)
+      case None =>
+        None
+    }
+  }
 }
 
 case class RoomUser(id: Option[Long], userId: Long, roomId: Long, created: DateTime)

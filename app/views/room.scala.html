@@ -29,12 +29,28 @@
                 <div class="message" ng-repeat="msg in messages">
                     <img class="avatar" ng-src="{{msg.user.avatarUrl}}"/>
                     <span>{{msg.user.fullName}}</span>
+                    <div ng-if="msg.comment.replyTo">
+                        <blockquote class="reply">
+                            <img class="avatar-small" ng-src="{{msg.comment.replyTo.user.avatarUrl}}">
+                            <span>{{msg.comment.replyTo.user.fullName}}</span>
+                            <div marked="msg.comment.replyTo.message"></div>
+                        </blockquote>
+                    </div>
                     <div marked="msg.comment.message"></div>
                     <p class="pull-right">{{msg.comment.created | date:'@Messages("phantasm.date.pattern.short")'}}</p>
                     <span class="pull-right message-operation link" ng-click="reply(msg)">reply</span>
                 </div>
             </div>
             <div class="talk">
+                <div ng-if="replyTo">
+                    reply to
+                    <blockquote class="reply">
+                        <img class="avatar-small" ng-src="{{replyTo.user.avatarUrl}}">
+                        <span>{{replyTo.user.fullName}}</span>
+                        <div marked="replyTo.message"></div>
+                    </blockquote>
+                    <a href="#" ng-click="replyCancel()" class="pull-right">(cancel)</a>
+                </div>
                 <textarea ng-keypress="talk($event)" ng-model="talkBody" id="talkBody" class="form-control" rows="5" placeholder="input message here. (Shift+Enter to send)"></textarea>
             </div>
         </div>

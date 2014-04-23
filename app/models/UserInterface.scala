@@ -36,10 +36,19 @@ object JsonWrites {
 
   implicit val implicitCommentWrites = new Writes[Comment] {
     def writes(comment: Comment): JsValue = {
+      val replyTo: JsValue = comment.reply_to match {
+        case Some(c) => Json.obj(
+          "id" -> c.id,
+          "user" -> c.user,
+          "message" -> c.message,
+          "created" -> c.created
+        )
+        case None => JsNull
+      }
       Json.obj(
         "id" -> comment.id,
         "user" -> comment.user,
-        "replyTo" -> comment.replyTo,
+        "replyTo" -> replyTo,
         "message" -> comment.message,
         "created" -> comment.created
       )
