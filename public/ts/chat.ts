@@ -167,7 +167,11 @@ module Chat {
 
                             if($scope.userSetting.desktopNotifications && data.user.id != $scope.userId) {
                                 var notify = new Notify("Phantasm - " + data.user.fullName, {body : data.comment.message, icon: data.user.avatarUrl});
-                                notify.show();
+                                notify.show()
+
+                                setTimeout(() => {
+                                    notify.close()
+                                }, 5000)
                             }
 
                             $scope.$digest()
