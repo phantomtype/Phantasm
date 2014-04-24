@@ -18,7 +18,8 @@
     "bootstrap": "~3.0",
     "angular": "~1.2",
     "angular-marked": "Hypercubed/angular-marked#~0.0.5",
-    "notify.js": "~1.2.0"
+    "notify.js": "~1.2.0",
+    "ngInfiniteScroll": "~1.1.0"
   },
   "exportsOverride": {
     "bootstrap": {

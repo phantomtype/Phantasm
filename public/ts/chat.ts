@@ -31,7 +31,7 @@ interface Comment {
     user: Member
     replyTo: Comment
     message: string
-    created: Date
+    created: number
 }
 
 interface UserSetting {
@@ -127,26 +127,33 @@ module Chat {
         requestPermission: ()=> void
         setNotification: (boolean)=> void
         notify : notify.INotify
+
+        busy: boolean
     }
 
     export class Controller {
         constructor($scope:Scope, $http:ng.IHttpService) {
             $scope.replyTo = null
             $scope.messages = []
-            $http.get("/room/" + $scope.roomId + "/messages/" + new Date().getTime()).success((result) => {
-                result.forEach((message: Message) => {
-                    $scope.messages.unshift(message)
-                })
-                setTimeout(() => {
-                    $("div.messages").animate({ scrollTop: $("div.messages")[0].scrollHeight }, 1)
-                }, 50)
-            })
+            $scope.busy = false
 
             $scope.read_more = () => {
-                $http.get("/room/" + $scope.roomId + "/messages/" + $scope.messages[0].comment.created).success((result) => {
+                if ($(".messages")[0].scrollTop > 0) {
+                    return
+                }
+
+                if ($scope.busy) return
+                $scope.busy = true
+                var to: number = $scope.messages.length > 0 ? $scope.messages[0].comment.created : new Date().getTime()
+                $http.get("/room/" + $scope.roomId + "/messages/" + to).success((result) => {
                     result.forEach((message: Message) => {
                         $scope.messages.unshift(message)
                     })
+                    setTimeout(() => {
+                        $("div.messages").animate({ scrollTop: $("#message-" + result[0].comment.id)[0].offsetTop }, 1)
+                        $scope.busy = false
+                        $scope.$digest()
+                    }, 300)
                 })
             }
 
@@ -186,7 +193,15 @@ module Chat {
                             }
 
                             $scope.$digest()
-                            $("div.messages").animate({ scrollTop: $("div.messages")[0].scrollHeight }, 'fast')
+
+                            if (!$scope.busy) {
+                                $scope.busy = true
+                                setTimeout(() => {
+                                    $("div.messages").animate({ scrollTop: $("#message-" + data.comment.id)[0].offsetTop }, 1)
+                                    $scope.busy = false
+                                    $scope.$digest()
+                                }, 300)
+                            }
                         } else {
                             $scope.members = []
                             data.members.forEach((member:Member) => {
@@ -213,7 +228,6 @@ module Chat {
                             }))
                             $scope.talkBody = ""
                             $scope.replyTo = null
-                            $("div.messages").animate({ scrollTop: $("div.messages")[0].scrollHeight }, 'fast')
                         }
                     }
                 }
@@ -255,7 +269,7 @@ function detectmob() {
     }
 }
 
-var app = angular.module('phantasm', ['hc.marked'])
+var app = angular.module('phantasm', ['hc.marked', 'infinite-scroll'])
 app.config(["marked", (marked) => {
     marked.setOptions({gfm: true, breaks: true, sanitize: true})
 }])

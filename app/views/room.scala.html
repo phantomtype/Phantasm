@@ -25,9 +25,8 @@
 
                 </div>
             </header>
-            <div class="messages">
-                <button class="btn btn-default btn-block" ng-click="read_more()">@Messages("phantasm.room.read_more")</button>
-                <div class="message" ng-repeat="msg in messages">
+            <div class="messages" infinite-scroll="read_more()" infinite-scroll-disabled='busy' id="messages">
+                <div class="message" ng-repeat="msg in messages" id="message-{{msg.comment.id}}">
                     <img class="avatar" ng-src="{{msg.user.avatarUrl}}"/>
                     <span>{{msg.user.fullName}}</span>
                     <div ng-if="msg.comment.replyTo">
