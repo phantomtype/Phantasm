@@ -116,6 +116,7 @@ module Chat {
         talk: (KeyboardEvent) => void
         reply: (msg: Message) => void
         replyCancel: () => void
+        read_more: () => void
         replyTo: Comment
         members: Member[]
         rooms: Room[]
@@ -140,6 +141,14 @@ module Chat {
                     $("div.messages").animate({ scrollTop: $("div.messages")[0].scrollHeight }, 1)
                 }, 50)
             })
+
+            $scope.read_more = () => {
+                $http.get("/room/" + $scope.roomId + "/messages/" + $scope.messages[0].comment.created).success((result) => {
+                    result.forEach((message: Message) => {
+                        $scope.messages.unshift(message)
+                    })
+                })
+            }
 
             $scope.rooms = []
             $http.get("/rooms").success((result) => {

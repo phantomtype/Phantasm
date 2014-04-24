@@ -422,6 +422,17 @@ object Tables extends WithDefaultSession {
         } yield (comment, user)
         q.sortBy(_._1.created.desc).take(size).list
     }
+
+    def comments(roomId: Long, size: Int, to: DateTime): Seq[(Comment, User)] = withSession {
+      implicit session =>
+        val q = for {
+          comment <- Tables.Comments
+            if comment.roomId is roomId
+            if comment.created < to
+          user <- Tables.Users if comment.userId === user.uid
+        } yield (comment, user)
+        q.sortBy(_._1.created.desc).take(size).list
+    }
   }
 
   val UserSettings = new TableQuery[UserSettings](new UserSettings(_)) {

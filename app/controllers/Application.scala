@@ -10,6 +10,7 @@ import models.JsonWrites._
 import play.api.data.Form
 import play.api.data.Forms._
 import org.joda.time.DateTime
+import org.joda.time.format.{DateTimeFormat, DateTimeFormatterBuilder}
 
 object Application extends Controller with securesocial.core.SecureSocial {
 
@@ -77,6 +78,13 @@ object Application extends Controller with securesocial.core.SecureSocial {
   def recentlyMessage(roomId: Long) = SecuredAction { implicit request =>
     val messages = Tables.Rooms.recent_comments(roomId, 20).map { t =>
       TalkMessage("talk", t._2, t._1)
+    }
+    Ok(Json.toJson(messages))
+  }
+
+  def messages(roomId: Long, to: Long) = SecuredAction { implicit request =>
+    val messages = Tables.Rooms.comments(roomId, 20, new DateTime(to)).map { c =>
+      TalkMessage("talk", c._2, c._1)
     }
     Ok(Json.toJson(messages))
   }

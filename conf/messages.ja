@@ -20,3 +20,5 @@ phantasm.main.account=アカウント
 
 phantasm.date.pattern.short=M月d日 HH:mm
 phantasm.date.pattern.long=y年M月d日 HH:mm
+
+phantasm.room.read_more=Read More...

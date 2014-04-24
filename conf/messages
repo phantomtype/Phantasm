@@ -20,3 +20,5 @@ phantasm.main.account=Account
 
 phantasm.date.pattern.short=M/d HH:mm
 phantasm.date.pattern.long=M/d/y HH:mm
+
+phantasm.room.read_more=Read More...
