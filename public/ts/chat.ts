@@ -133,9 +133,9 @@ module Chat {
         constructor($scope:Scope, $http:ng.IHttpService) {
             $scope.replyTo = null
             $scope.messages = []
-            $http.get("/recently_messages/" + $scope.roomId).success((result) => {
-                result.reverse().forEach((message: Message) => {
-                    $scope.messages.push(message)
+            $http.get("/room/" + $scope.roomId + "/messages/" + new Date().getTime()).success((result) => {
+                result.forEach((message: Message) => {
+                    $scope.messages.unshift(message)
                 })
                 setTimeout(() => {
                     $("div.messages").animate({ scrollTop: $("div.messages")[0].scrollHeight }, 1)

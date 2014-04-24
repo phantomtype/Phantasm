@@ -46,7 +46,7 @@ case class Room(id: Option[Long], ownerId: Long, name: String, isPrivate: Boolea
   }
 
   def latest_post: Option[Comment] = {
-    Tables.Rooms.recent_comments(this.id.get, 1).headOption match {
+    Tables.Rooms.comments(this.id.get, 1).headOption match {
       case Some(comment) =>
         Some(comment._1)
       case None =>

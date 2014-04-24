@@ -3,7 +3,6 @@ GET         /                                   controllers.Application.index
 GET         /rooms                              controllers.Application.rooms
 POST        /room/create                        controllers.Application.createRoom
 GET         /room/:id                           controllers.Application.room(id: Long)
-GET         /recently_messages/:roomId          controllers.Application.recentlyMessage(roomId: Long)
 GET         /room/:roomId/messages/:to          controllers.Application.messages(roomId: Long, to: Long)
 GET         /room/:roomId/wspath                controllers.Application.pathToRoom(roomId: Long)
 GET         /room/:roomId/chat                  controllers.Application.chat(roomId: Long)

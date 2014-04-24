@@ -414,16 +414,7 @@ object Tables extends WithDefaultSession {
         roomId
     }
 
-    def recent_comments(roomId: Long, size: Int): Seq[(Comment, User)] = withSession {
-      implicit session =>
-        val q = for {
-          comment <- Tables.Comments if comment.roomId is roomId
-          user <- Tables.Users if comment.userId === user.uid
-        } yield (comment, user)
-        q.sortBy(_._1.created.desc).take(size).list
-    }
-
-    def comments(roomId: Long, size: Int, to: DateTime): Seq[(Comment, User)] = withSession {
+    def comments(roomId: Long, size: Int, to: DateTime = DateTime.now): Seq[(Comment, User)] = withSession {
       implicit session =>
         val q = for {
           comment <- Tables.Comments
