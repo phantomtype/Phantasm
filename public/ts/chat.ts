@@ -1,6 +1,7 @@
 /// <reference path="../d.ts/DefinitelyTyped/jquery/jquery.d.ts" />
 /// <reference path="../d.ts/DefinitelyTyped/angularjs/angular.d.ts" />
 /// <reference path="../d.ts/DefinitelyTyped/notify.js/notify.js.d.ts" />
+/// <reference path="../d.ts/DefinitelyTyped/highlightjs/highlightjs.d.ts" />
 
 interface Room {
     id: number
@@ -271,7 +272,14 @@ function detectmob() {
 
 var app = angular.module('phantasm', ['hc.marked', 'infinite-scroll'])
 app.config(["marked", (marked) => {
-    marked.setOptions({gfm: true, breaks: true, sanitize: true})
+    marked.setOptions({
+        gfm: true,
+        breaks: true,
+        sanitize: true,
+        highlight: (code: any) => {
+            return this.hljs.highlightAuto(code).value;
+        }
+    })
 }])
 .controller("Rooms.Controller", Rooms.Controller)
 .controller("Chat.Controller", Chat.Controller)

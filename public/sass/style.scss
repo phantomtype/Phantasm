@@ -48,7 +48,7 @@ body {
                 div.message
                 {
                     border-bottom: 1px solid #eee;
-                    padding: 10px 0;
+                    padding-top: 10px;
 
                     .avatar {
                       float: left;
@@ -59,7 +59,7 @@ body {
                     }
 
                     .comment {
-                      margin-top: 3px;
+                      margin-top: 20px;
                     }
 
                     .option {
@@ -67,11 +67,11 @@ body {
 
                       .datetime {
                         float: right;
-                        margin: 0;
+                        margin: 0 10px;
                       }
 
                       .reply {
-                        margin: 0 15px;
+                        margin: 0 10px;
                         float: right;
                       }
                     }

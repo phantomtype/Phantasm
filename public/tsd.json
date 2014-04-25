@@ -16,6 +16,9 @@
 		},
 		"notify.js/notify.js.d.ts": {
 			"commit": "a3456013ad809e78d8f1b8f1a7895fddff7c1028"
+		},
+		"highlightjs/highlightjs.d.ts": {
+			"commit": "a3456013ad809e78d8f1b8f1a7895fddff7c1028"
 		}
 	}
 }
