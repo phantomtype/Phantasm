@@ -28,17 +28,19 @@
             <div class="messages" infinite-scroll="read_more()" infinite-scroll-disabled='busy' id="messages">
                 <div class="message" ng-repeat="msg in messages" id="message-{{msg.comment.id}}">
                     <img class="avatar" ng-src="{{msg.user.avatarUrl}}"/>
-                    <span>{{msg.user.fullName}}</span>
+                    <span class="name">{{msg.user.fullName}}</span>
+                    <span class="option">
+                        <p class="datetime">{{msg.comment.created | date:'@Messages("phantasm.date.pattern.short")'}}</p>
+                        <button class="reply btn btn-default btn-xs" ng-click="reply(msg)">reply</button>
+                    </span>
                     <div ng-if="msg.comment.replyTo">
                         <blockquote class="reply">
                             <img class="avatar-small" ng-src="{{msg.comment.replyTo.user.avatarUrl}}">
-                            <span>{{msg.comment.replyTo.user.fullName}}</span>
+                            <span class="name">{{msg.comment.replyTo.user.fullName}}</span>
                             <div marked="msg.comment.replyTo.message"></div>
                         </blockquote>
                     </div>
-                    <div marked="msg.comment.message"></div>
-                    <p class="pull-right">{{msg.comment.created | date:'@Messages("phantasm.date.pattern.short")'}}</p>
-                    <span class="pull-right message-operation link" ng-click="reply(msg)">reply</span>
+                    <div class="comment" marked="msg.comment.message"></div>
                 </div>
             </div>
             <div class="talk">

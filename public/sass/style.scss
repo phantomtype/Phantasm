@@ -47,12 +47,33 @@ body {
 
                 div.message
                 {
-                    border-bottom: 1px solid #ccc;
-                    padding: 15px 0;
+                    border-bottom: 1px solid #eee;
+                    padding: 10px 0;
 
-                    .message-operation {
+                    .avatar {
+                      float: left;
+                    }
+
+                    .name {
+                      color: #aaa;
+                    }
+
+                    .comment {
+                      margin-top: 3px;
+                    }
+
+                    .option {
                       color: #CCCCCC;
-                      margin: 0 15px;
+
+                      .datetime {
+                        float: right;
+                        margin: 0;
+                      }
+
+                      .reply {
+                        margin: 0 15px;
+                        float: right;
+                      }
                     }
                 }
             }
