@@ -23,9 +23,10 @@ module.exports = (grunt) ->
           basePath: "ts"
 
     tsd:
-      client:
+      refresh:
         options:
           command: 'reinstall'
+          latest: true
           config: './tsd.json'
 
     compass:
