@@ -22,6 +22,7 @@ interface Member {
     firstName: string
     fullName:   string
     userSetting: UserSetting
+    online: boolean
 }
 
 interface Comment {
@@ -117,6 +118,7 @@ module Chat {
         read_more: () => void
         replyTo: Comment
         members: Member[]
+        showRoomMembers: () => void
         rooms: Room[]
         userSetting: UserSetting
 
@@ -127,6 +129,13 @@ module Chat {
         notify : notify.INotify
 
         busy: boolean
+
+        showAddMemberForm: boolean
+        openAddMemberForm: () => void
+        closeAddMemberForm: () => void
+        newMember: Member
+        addableUsers: Member[]
+        addMember: (Member) => void
     }
 
     export class Controller {
@@ -161,6 +170,16 @@ module Chat {
                     $scope.rooms.push(room)
                 })
             })
+
+            $scope.showRoomMembers = () => {
+                $scope.members = []
+                $http.get("/room/" + $scope.roomId + "/members").success((result) => {
+                    result.forEach((member:Member) => {
+                        $scope.members.push(member)
+                    })
+                })
+            }
+            $scope.showRoomMembers()
 
             $http.get("/room/" + $scope.roomId + "/wspath").success((result) => {
                 var chatSocket = new WebSocket(result.path)
@@ -201,9 +220,9 @@ module Chat {
                                 }, 300)
                             }
                         } else {
-                            $scope.members = []
-                            data.members.forEach((member:Member) => {
-                                $scope.members.push(member)
+                            data.members.forEach((member: Member) => {
+                                var index = $scope.members.map((m:Member) => m.id).indexOf(member.id)
+                                $scope.members[index].online = true
                             })
                         }
                     }
@@ -246,6 +265,27 @@ module Chat {
 
             $scope.setNotification = (value: boolean) => {
                 $scope.userSetting.desktopNotifications = value
+            }
+
+
+            // add room member
+
+            $scope.openAddMemberForm = () => {
+                $scope.addableUsers = []
+                $http.get("/room/" + $scope.roomId + "/addable_users").success((data: Member[]) => {
+                    data.forEach((user: Member) => {
+                        $scope.addableUsers.push(user)
+                    })
+                    $scope.showAddMemberForm = true
+                })
+            }
+
+            $scope.closeAddMemberForm = () => { $scope.showAddMemberForm = false }
+
+            $scope.addMember = (member: Member) => {
+                $http.post("/room/" + $scope.roomId + "/add_member", member).success((data) => {
+                    $scope.showRoomMembers()
+                })
             }
         }
     }

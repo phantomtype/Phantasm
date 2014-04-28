@@ -25,6 +25,10 @@ object Application extends Controller with securesocial.core.SecureSocial {
     }
   }
 
+  implicit def myRoom(roomId: Long)(implicit request: RequestHeader): Option[Room] = {
+    user.get.myRooms().find(_.id.get == roomId)
+  }
+
   def index = SecuredAction { implicit rs =>
     Ok(views.html.rooms())
   }
@@ -47,8 +51,8 @@ object Application extends Controller with securesocial.core.SecureSocial {
     )
   }
 
-  def room(id: Long) = SecuredAction { implicit rs =>
-    Tables.Rooms.findRoom(id) match {
+  def room(roomId: Long) = SecuredAction { implicit rs =>
+    myRoom(roomId) match {
       case Some(room) =>
         Ok(views.html.room(room))
       case None =>
@@ -68,22 +72,43 @@ object Application extends Controller with securesocial.core.SecureSocial {
   }
 
   def chat(roomId: Long) = WebSocket.async[JsValue] { implicit request  =>
-    ChatRoom.join(roomId, user.get)
+    ChatRoom.join(myRoom(roomId).get.id.get, user.get)
   }
 
   def pathToRoom(roomId: Long) = SecuredAction { implicit rs =>
-    Ok(Json.toJson(Json.obj("path" -> routes.Application.chat(roomId).webSocketURL())))
+    Ok(Json.toJson(Json.obj("path" -> routes.Application.chat(myRoom(roomId).get.id.get).webSocketURL())))
   }
 
   def messages(roomId: Long, to: Long) = SecuredAction { implicit request =>
-    val messages = Tables.Rooms.comments(roomId, 20, new DateTime(to)).map { c =>
+    val messages = myRoom(roomId).get.comments(20, new DateTime(to)).map { c =>
       TalkMessage("talk", c._2, c._1)
     }
     Ok(Json.toJson(messages))
   }
 
   def rooms = SecuredAction { implicit rs =>
-    Ok(Json.toJson(Tables.Rooms.all))
+    Ok(Json.toJson(user.get.myRooms()))
   }
 
+  def roomMembers(roomId: Long) = SecuredAction { implicit request =>
+    Ok(Json.toJson(myRoom(roomId).get.members))
+  }
+
+  def addableUsers(roomId: Long) = SecuredAction { implicit request =>
+    val users = Tables.Users.all // TODO: check for addable
+    val roomMembers = myRoom(roomId).get.members
+    val addableUsers = users.filterNot(roomMembers.contains(_))
+    Ok(Json.toJson(addableUsers))
+  }
+
+  def addMemberToRoom(roomId: Long) = SecuredAction { implicit request =>
+    Form(("id" -> number)).bindFromRequest.fold(
+      errors => BadRequest,
+      (id) => {
+        val user = Tables.Users.findById(id).get
+        myRoom(roomId).get.addMember(user)
+        NoContent
+      }
+    )
+  }
 }

@@ -112,6 +112,14 @@ body {
               padding: 10px;
               font-weight: bold;
             }
+
+            li.offline {
+              color: #ccc;
+            }
+
+            li.online {
+              color: #000;
+            }
           }
         }
     }

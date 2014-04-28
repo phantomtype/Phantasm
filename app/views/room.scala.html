@@ -59,9 +59,17 @@
         <aside id="sidebar">
             <ul class="members">
                 <li class="header">members</li>
-                <li ng-repeat="member in members">
+                <li ng-repeat="member in members" class="{{member.online ? 'online' : 'offline'}}">
                     <img class="avatar-small" ng-src="{{member.avatarUrl}}" />
                     <span>{{member.fullName}}</span>
+                </li>
+                <li ng-if="!showAddMemberForm">
+                    <button class="btn btn-default btn-xs" ng-click="openAddMemberForm()">add room member</button>
+                </li>
+                <li ng-if="showAddMemberForm">
+                    <select ng-model="newMember" ng-options="user.fullName for user in addableUsers"></select>
+                    <button class="btn btn-default btn-xs" ng-click="addMember(newMember)">add</button>
+                    <button class="btn btn-default btn-xs" ng-click="closeAddMemberForm()">close</button>
                 </li>
             </ul>
 

@@ -284,7 +284,7 @@ object Tables extends WithDefaultSession {
   val Users = new TableQuery[Users](new Users(_)) {
     def autoInc = this returning this.map(_.uid)
 
-    def findById(id: Long) = withSession {
+    def findById(id: Long): Option[User] = withSession {
       implicit session =>
         val q = for {
           user <- this
@@ -314,7 +314,7 @@ object Tables extends WithDefaultSession {
         q.firstOption
     }
 
-    def all = withSession {
+    def all(): Seq[User] = withSession {
       implicit session =>
         val q = for {
           user <- this
@@ -348,7 +348,25 @@ object Tables extends WithDefaultSession {
   }
 
 
-  val RoomUsers = TableQuery[RoomUsers](new RoomUsers(_))
+  val RoomUsers = new TableQuery[RoomUsers](new RoomUsers(_)) {
+    def findByRoomId(roomId: Long): Seq[User] = withSession { implicit session =>
+      val q = for {
+        (roomUser) <- this if roomUser.roomId is roomId
+        (user)     <- Tables.Users if user.uid is roomUser.userId
+      } yield user
+
+      q.list
+    }
+
+    def findByUserId(userId: Long): Seq[Room] = withSession( { implicit session =>
+      val q = for {
+        (roomUser) <- this if roomUser.userId is userId
+        (room)     <- TableQuery[Rooms] if room.id is roomUser.roomId
+      } yield room
+
+      q.list
+    })
+  }
 
   val Comments = new TableQuery[Comments](new Comments(_)) {
     def findById(id: Long): Option[Comment] = withSession { implicit session =>
@@ -361,16 +379,26 @@ object Tables extends WithDefaultSession {
   }
 
   val Rooms = new TableQuery[Rooms](new Rooms(_)) {
+    def autoInc = this returning this.map(_.id)
+
+    def findById(id: Long): Option[Room] = withSession { implicit session =>
+      val q = for {
+        (room) <- this if room.id is id
+      } yield room
+
+      q.firstOption
+    }
+
     def createComment(comment: Comment): Comment = withSession {
       implicit session =>
         val newId = (Tables.Comments returning Tables.Comments.map(_.id)) += comment
         comment.copy(id = Some(newId))
     }
 
-    def all(): Seq[Room] = withSession {
+    def public_rooms(): Seq[Room] = withSession {
       implicit session =>
         val q = for {
-          (room) <- this
+          (room) <- this if room.isPrivate is false
         } yield room
 
         q.list()
@@ -385,17 +413,6 @@ object Tables extends WithDefaultSession {
         q.firstOption
     }
 
-    def findJoinedRooms(u: User): List[Room] = withSession {
-      implicit session =>
-        val q = for {
-          (room, roomUser) <- this leftJoin Tables.RoomUsers on (_.id === _.roomId)
-          (roomUser, user) <- Tables.RoomUsers leftJoin Tables.Users on (_.userId === _.uid)
-          if roomUser.userId is u.uid
-        } yield room
-
-        q.list()
-    }
-
     def findOwnedRooms(u: User): List[Room] = withSession {
       implicit session =>
         val q = for {
@@ -408,7 +425,7 @@ object Tables extends WithDefaultSession {
 
     def createRoom(room: Room): Long = withSession {
       implicit session =>
-        val roomId = this.insert(room)
+        val roomId = this.autoInc.insert(room)
         val roomUser = RoomUser(None, room.ownerId, roomId, DateTime.now)
         Tables.RoomUsers.insert(roomUser)
         roomId
@@ -423,6 +440,11 @@ object Tables extends WithDefaultSession {
           user <- Tables.Users if comment.userId === user.uid
         } yield (comment, user)
         q.sortBy(_._1.created.desc).take(size).list
+    }
+
+    def addMember(room: Room, user: User): Unit = withSession { implicit session =>
+      val roomUser = RoomUser(None, user.uid.get, room.id.get, DateTime.now)
+      Tables.RoomUsers.insert(roomUser)
     }
   }
 

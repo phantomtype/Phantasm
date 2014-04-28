@@ -26,6 +26,12 @@ case class User(uid: Option[Long] = None,
   def saveUserSetting(desktopNotifications: Boolean): Unit = {
     Tables.UserSettings.saveUserSetting(this, desktopNotifications)
   }
+
+  def myRooms(): Set[Room] = {
+    val publicRooms = Tables.Rooms.public_rooms()
+    val joinedRooms = Tables.RoomUsers.findByUserId(this.uid.get)
+    (publicRooms ++ joinedRooms).toSet
+  }
 }
 
 object UserFromIdentity {
@@ -52,6 +58,18 @@ case class Room(id: Option[Long], ownerId: Long, name: String, isPrivate: Boolea
       case None =>
         None
     }
+  }
+
+  def comments(size: Int, to: DateTime): Seq[(Comment, User)] = {
+    Tables.Rooms.comments(this.id.get, size, to)
+  }
+
+  def members: Seq[User] = {
+    Tables.RoomUsers.findByRoomId(this.id.get)
+  }
+
+  def addMember(user: User): Unit = {
+    Tables.Rooms.addMember(this, user)
   }
 }
 
