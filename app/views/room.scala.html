@@ -4,7 +4,7 @@
 
 @main(room.name) {
 
-<div id="chatContent" ng-init="roomId = @room.id; userId = @user.get.uid.get">
+<div id="chatContent" ng-init="roomId = @room.id; userId = @user.get.uid.get; private_room = @room.isPrivate; is_room_member = @room.members.map(_.uid.get).contains(user.get.uid.get)">
     <div id="onChat" class="" ng-controller="Chat.Controller">
         <div class="messages-chat">
             <header>
@@ -63,14 +63,22 @@
                     <img class="avatar-small" ng-src="{{member.avatarUrl}}" />
                     <span>{{member.fullName}}</span>
                 </li>
-                <li ng-if="!showAddMemberForm">
-                    <button class="btn btn-default btn-xs" ng-click="openAddMemberForm()">add room member</button>
-                </li>
-                <li ng-if="showAddMemberForm">
-                    <select ng-model="newMember" ng-options="user.fullName for user in addableUsers"></select>
-                    <button class="btn btn-default btn-xs" ng-click="addMember(newMember)">add</button>
-                    <button class="btn btn-default btn-xs" ng-click="closeAddMemberForm()">close</button>
-                </li>
+                <span ng-if="private_room">
+                    <li ng-if="!showAddMemberForm">
+                        <button class="btn btn-default btn-xs" ng-click="openAddMemberForm()">add room member</button>
+                    </li>
+                    <li ng-if="showAddMemberForm">
+                        <select ng-model="newMember" ng-options="user.fullName for user in addableUsers"></select>
+                        <button class="btn btn-default btn-xs" ng-click="addMember(newMember)">add</button>
+                        <button class="btn btn-default btn-xs" ng-click="closeAddMemberForm()">close</button>
+                    </li>
+                </span>
+
+                <span ng-if="!private_room">
+                    <li ng-if="!is_room_member">
+                        <button class="btn btn-default btn-xs" ng-click="join_room()">join as room member</button>
+                    </li>
+                </span>
             </ul>
 
             <ul class="rooms">

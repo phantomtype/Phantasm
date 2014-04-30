@@ -110,6 +110,8 @@ module Chat {
     export interface Scope extends ng.IScope {
         roomId: number
         userId: number
+        private_room: boolean
+        is_room_member: boolean
         messages: Message[]
         talkBody: String
         talk: (KeyboardEvent) => void
@@ -136,6 +138,7 @@ module Chat {
         newMember: Member
         addableUsers: Member[]
         addMember: (Member) => void
+        join_room: () => void
     }
 
     export class Controller {
@@ -285,6 +288,16 @@ module Chat {
             $scope.addMember = (member: Member) => {
                 $http.post("/room/" + $scope.roomId + "/add_member", member).success((data) => {
                     $scope.showRoomMembers()
+                })
+            }
+
+
+            // join room
+
+            $scope.join_room = () => {
+                $http.post("/room/" + $scope.roomId + "/add_member", {id: $scope.userId}).success((data) => {
+                    $scope.showRoomMembers()
+                    $scope.is_room_member = true
                 })
             }
         }
