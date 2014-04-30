@@ -4,7 +4,7 @@
 
 @main(room.name) {
 
-<div id="chatContent" ng-init="roomId = @room.id; userId = @user.get.uid.get; private_room = @room.isPrivate; is_room_member = @room.members.map(_.uid.get).contains(user.get.uid.get)">
+<div id="chatContent" ng-init="roomId = @room.id; userId = @user.get.uid.get; private_room = @room.isPrivate; is_owned_room = @room.ownerId == @user.get.uid.get; is_room_member = @room.members.map(_.uid.get).contains(user.get.uid.get)">
     <div id="onChat" class="" ng-controller="Chat.Controller">
         <div class="messages-chat">
             <header>
@@ -63,7 +63,7 @@
                     <img class="avatar-small" ng-src="{{member.avatarUrl}}" />
                     <span>{{member.fullName}}</span>
                 </li>
-                <span ng-if="private_room">
+                <span ng-if="private_room && is_owned_room">
                     <li ng-if="!showAddMemberForm">
                         <button class="btn btn-default btn-xs" ng-click="openAddMemberForm()">add room member</button>
                     </li>

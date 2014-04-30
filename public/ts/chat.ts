@@ -112,6 +112,7 @@ module Chat {
         userId: number
         private_room: boolean
         is_room_member: boolean
+        is_owned_room: boolean
         messages: Message[]
         talkBody: String
         talk: (KeyboardEvent) => void
