@@ -100,17 +100,17 @@ body {
         }
 
         #sidebar {
-          display: flex;
-          flex-direction: column;
           margin: 5px 0;
 
           ul {
-            flex: 1;
             list-style: none;
+            overflow-y: auto;
 
             li.header {
               padding: 10px;
               font-weight: bold;
+              background-color: #ddd;
+              color: #fff;
             }
 
             li.offline {
