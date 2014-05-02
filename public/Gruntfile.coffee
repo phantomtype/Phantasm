@@ -40,7 +40,7 @@ module.exports = (grunt) ->
         tasks: [ 'compile' ]
 
       sass:
-        files: [ 'sass/style.scss' ]
+        files: [ 'sass/*.scss' ]
         tasks: [ 'compass', 'cmq', 'csscomb' ]
         options:
           nospawn: true

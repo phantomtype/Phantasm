@@ -1,5 +1,6 @@
 @charset "utf-8";
 
+@import "variables";
 @import "../lib/bootstrap-sass-official/stylesheets/bootstrap";
 
 html {
@@ -118,7 +119,7 @@ body {
             li.header {
               padding: 10px;
               font-weight: bold;
-              background-color: #ddd;
+              background-color: #ccc;
               color: #fff;
             }
 
