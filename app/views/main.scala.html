@@ -6,14 +6,13 @@
     <title>Phantasm @title</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" media="screen" href='@routes.Assets.at("lib/bootstrap/css/bootstrap.css")'>
     <link rel="stylesheet" media="screen" href='@routes.Assets.at("css/style.css")'>
     <link rel="stylesheet" media="screen" href='@routes.Assets.at("lib/highlightjs/styles/atelier-forest.light.css")'>
     <link rel="shortcut icon" type="image/png" href='@routes.Assets.at("img/favicon.png")'>
 
     <script type="text/javascript" src='@routes.Assets.at("lib/notify.js/notify.js")'></script>
     <script type="text/javascript" src='@routes.Assets.at("lib/jquery/jquery.js")'></script>
-    <script type="text/javascript" src='@routes.Assets.at("lib/bootstrap/js/bootstrap.js")'></script>
+    <script type="text/javascript" src='@routes.Assets.at("lib/bootstrap/bootstrap.js")'></script>
     <script type="text/javascript" src='@routes.Assets.at("lib/angular/angular.js")'></script>
     <script type="text/javascript" src='@routes.Assets.at("lib/marked/lib/marked.js")'></script>
     <script type="text/javascript" src='@routes.Assets.at("lib/angular-marked/angular-marked.js")'></script>
@@ -35,7 +34,10 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img class="avatar" src="@user.get.avatarUrl" /> @user.get.fullName <b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img class="avatar-small" src="@user.get.avatarUrl" />
+                            @user.get.fullName <b class="caret"></b>
+                        </a>
                         <ul class="dropdown-menu" role="menu" >
                             <li><a href="/account">@Messages("phantasm.main.account")</a></li>
                             <li><a href="/logout">@Messages("phantasm.main.logout")</a></li>

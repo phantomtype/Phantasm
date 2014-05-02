@@ -15,7 +15,8 @@
   ],
   "dependencies": {
     "jquery": "~2.0",
-    "bootstrap": "~3.0",
+    "bootstrap": "~3.1",
+    "bootstrap-sass-official": "~3.1",
     "angular": "~1.2",
     "angular-marked": "Hypercubed/angular-marked#0.0.5",
     "notify.js": "~1.2.0",
@@ -23,8 +24,8 @@
     "highlightjs": "~8.0.0"
   },
   "exportsOverride": {
-    "bootstrap": {
-      "": "dist"
+    "bootstrap-sass-official": {
+      "": "vendor/assets"
     },
     "highlightjs": {
       "": "/"
