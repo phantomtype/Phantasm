@@ -4,7 +4,12 @@
 
 @main(room.name) {
 
+
+@if(user.isDefined) {
 <div id="chatContent" ng-init="roomId = @room.id; userId = @user.get.uid.get; private_room = @room.isPrivate; is_owned_room = @room.ownerId == @user.get.uid.get; is_room_member = @room.members.map(_.uid.get).contains(user.get.uid.get)">
+} else {
+<div id="chatContent" ng-init="roomId = @room.id; userId = null; private_room = false; is_owned_room = false; is_room_member = false">
+}
     <div id="onChat" class="" ng-controller="Chat.Controller">
         <div class="messages-chat">
             <header>
@@ -31,7 +36,9 @@
                     <span class="name">{{msg.user.fullName}}</span>
                     <span class="option">
                         <p class="datetime">{{msg.comment.created | date:'@Messages("phantasm.date.pattern.short")'}}</p>
-                        <button class="reply btn btn-default btn-xs" ng-click="reply(msg)">reply</button>
+                        @if(user.isDefined) {
+                            <button class="reply btn btn-default btn-xs" ng-click="reply(msg)">reply</button>
+                        }
                     </span>
                     <div ng-if="msg.comment.replyTo">
                         <blockquote class="reply">
@@ -44,6 +51,7 @@
                 </div>
             </div>
             <div class="talk">
+            @if(user.isDefined) {
                 <div ng-if="replyTo">
                     reply to
                     <blockquote class="reply">
@@ -54,6 +62,9 @@
                     <a href="#" ng-click="replyCancel()" class="pull-right">(cancel)</a>
                 </div>
                 <textarea ng-keypress="talk($event)" ng-model="talkBody" id="talkBody" class="form-control" placeholder="input message here. (Shift+Enter to send)"></textarea>
+            } else {
+                <a href="/login" class="btn btn-primary btn-lg btn-block">Please Login to join room</a>
+            }
             </div>
         </div>
         <aside id="sidebar">
@@ -74,7 +85,7 @@
                     </li>
                 </span>
 
-                <span ng-if="!private_room">
+                <span ng-if="!private_room && user_id != null">
                     <li ng-if="!is_room_member">
                         <button class="btn btn-default btn-xs" ng-click="join_room()">join as room member</button>
                     </li>

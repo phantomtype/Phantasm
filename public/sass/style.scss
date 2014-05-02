@@ -19,10 +19,15 @@ body {
     height: 100%;
 
   @media(min-width: 768px) {
-    .navbar-nav > li > a {
-      padding: 10px 0;
+    .navbar-nav > li {
+      > a {
+        padding: 10px 0;
+      }
+      > button > a {
+        color: #fff;
+      }
     }
-    
+
   }
 }
 

@@ -25,11 +25,21 @@ object Application extends Controller with securesocial.core.SecureSocial {
     }
   }
 
-  implicit def myRoom(roomId: Long)(implicit request: RequestHeader): Option[Room] = {
-    user.get.myRooms().find(_.id.get == roomId)
+  implicit def myRooms()(implicit request: RequestHeader): Set[Room] = {
+    user match {
+      case Some(u) => user.get.myRooms()
+      case None => Tables.Rooms.public_rooms()
+    }
   }
 
-  def index = SecuredAction { implicit rs =>
+  implicit def myRoom(roomId: Long)(implicit request: RequestHeader): Option[Room] = {
+    user match {
+      case Some(u) => user.get.myRooms().find(_.id.get == roomId)
+      case None => Tables.Rooms.public_rooms().find(_.id.get == roomId)
+    }
+  }
+
+  def index = UserAwareAction { implicit rs =>
     Ok(views.html.rooms())
   }
 
@@ -51,12 +61,10 @@ object Application extends Controller with securesocial.core.SecureSocial {
     )
   }
 
-  def room(roomId: Long) = SecuredAction { implicit rs =>
+  def room(roomId: Long) = UserAwareAction { implicit rs =>
     myRoom(roomId) match {
-      case Some(room) =>
-        Ok(views.html.room(room))
-      case None =>
-        NotFound
+      case Some(r) => Ok(views.html.room(r))
+      case None => NotFound
     }
   }
 
@@ -79,18 +87,18 @@ object Application extends Controller with securesocial.core.SecureSocial {
     Ok(Json.toJson(Json.obj("path" -> routes.Application.chat(myRoom(roomId).get.id.get).webSocketURL())))
   }
 
-  def messages(roomId: Long, to: Long) = SecuredAction { implicit request =>
+  def messages(roomId: Long, to: Long) = UserAwareAction { implicit request =>
     val messages = myRoom(roomId).get.comments(20, new DateTime(to)).map { c =>
       TalkMessage("talk", c._2, c._1)
     }
     Ok(Json.toJson(messages))
   }
 
-  def rooms = SecuredAction { implicit rs =>
-    Ok(Json.toJson(user.get.myRooms()))
+  def rooms = UserAwareAction { implicit rs =>
+    Ok(Json.toJson(myRooms()))
   }
 
-  def roomMembers(roomId: Long) = SecuredAction { implicit request =>
+  def roomMembers(roomId: Long) = UserAwareAction { implicit request =>
     Ok(Json.toJson(myRoom(roomId).get.members))
   }
 

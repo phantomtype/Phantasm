@@ -185,78 +185,82 @@ module Chat {
             }
             $scope.showRoomMembers()
 
-            $http.get("/room/" + $scope.roomId + "/wspath").success((result) => {
-                var chatSocket = new WebSocket(result.path)
+            if ($scope.userId != null) {
+                $http.get("/room/" + $scope.roomId + "/wspath").success((result) => {
+                    var chatSocket = new WebSocket(result.path)
 
-                chatSocket.onopen = () => {
-                    chatSocket.onmessage = (event) => {
-                        var data:Message = JSON.parse(event.data)
+                    chatSocket.onopen = () => {
+                        chatSocket.onmessage = (event) => {
+                            var data:Message = JSON.parse(event.data)
 
-                        // Handle errors
-                        if (data.error) {
-                            chatSocket.close()
-                            console.log(data.error)
-                            return
-                        } else {
-                            $("#onChat").show()
-                        }
-
-                        if (data.kind == "talk") {
-                            $scope.messages.push(data)
-
-                            if($scope.userSetting.desktopNotifications && data.user.id != $scope.userId) {
-                                var notify = new Notify("Phantasm - " + data.user.fullName, {body : data.comment.message, icon: data.user.avatarUrl});
-                                notify.show()
-
-                                setTimeout(() => {
-                                    notify.close()
-                                }, 5000)
+                            // Handle errors
+                            if (data.error) {
+                                chatSocket.close()
+                                console.log(data.error)
+                                return
+                            } else {
+                                $("#onChat").show()
                             }
 
-                            $scope.$digest()
+                            if (data.kind == "talk") {
+                                $scope.messages.push(data)
 
-                            if (!$scope.busy) {
-                                $scope.busy = true
-                                setTimeout(() => {
-                                    $("div.messages").animate({ scrollTop: $("#message-" + data.comment.id)[0].offsetTop }, 1)
-                                    $scope.busy = false
-                                    $scope.$digest()
-                                }, 300)
+                                if ($scope.userSetting.desktopNotifications && data.user.id != $scope.userId) {
+                                    var notify = new Notify("Phantasm - " + data.user.fullName, {body: data.comment.message, icon: data.user.avatarUrl});
+                                    notify.show()
+
+                                    setTimeout(() => {
+                                        notify.close()
+                                    }, 5000)
+                                }
+
+                                $scope.$digest()
+
+                                if (!$scope.busy) {
+                                    $scope.busy = true
+                                    setTimeout(() => {
+                                        $("div.messages").animate({ scrollTop: $("#message-" + data.comment.id)[0].offsetTop }, 1)
+                                        $scope.busy = false
+                                        $scope.$digest()
+                                    }, 300)
+                                }
+                            } else {
+                                data.members.forEach((member:Member) => {
+                                    var index = $scope.members.map((m:Member) => m.id).indexOf(member.id)
+                                    $scope.members[index].online = true
+                                })
                             }
-                        } else {
-                            data.members.forEach((member: Member) => {
-                                var index = $scope.members.map((m:Member) => m.id).indexOf(member.id)
-                                $scope.members[index].online = true
-                            })
                         }
-                    }
 
-                    $scope.reply = (message: Message) => {
-                        $scope.replyTo = message.comment
-                        $("#talkBody").focus()
-                    }
+                        $scope.reply = (message:Message) => {
+                            $scope.replyTo = message.comment
+                            $("#talkBody").focus()
+                        }
 
-                    $scope.replyCancel = () => {
-                        $scope.replyTo = null
-                    }
-
-                    $scope.talk = (e:KeyboardEvent) => {
-                        if ((e.charCode == 13 || e.keyCode == 13) && (e.shiftKey || detectmob())) {
-                            e.preventDefault()
-                            chatSocket.send(JSON.stringify({
-                                text: $scope.talkBody,
-                                replyTo: $scope.replyTo == null ? null : $scope.replyTo.id
-                            }))
-                            $scope.talkBody = ""
+                        $scope.replyCancel = () => {
                             $scope.replyTo = null
                         }
-                    }
-                }
-            })
 
-            $http.get("/account/user_setting").success((data: UserSetting) => {
-                $scope.userSetting = data
-            })
+                        $scope.talk = (e:KeyboardEvent) => {
+                            if ((e.charCode == 13 || e.keyCode == 13) && (e.shiftKey || detectmob())) {
+                                e.preventDefault()
+                                chatSocket.send(JSON.stringify({
+                                    text: $scope.talkBody,
+                                    replyTo: $scope.replyTo == null ? null : $scope.replyTo.id
+                                }))
+                                $scope.talkBody = ""
+                                $scope.replyTo = null
+                            }
+                        }
+                    }
+                })
+            }
+
+            if ($scope.userId != null) {
+                $http.get("/account/user_setting").success((data: UserSetting) => {
+                    $scope.userSetting = data
+                })
+            }
 
             $scope.isSupportedNotification = Notify.isSupported()
             $scope.needsPermission = Notify.needsPermission()

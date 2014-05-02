@@ -395,13 +395,13 @@ object Tables extends WithDefaultSession {
         comment.copy(id = Some(newId))
     }
 
-    def public_rooms(): Seq[Room] = withSession {
+    def public_rooms(): Set[Room] = withSession {
       implicit session =>
         val q = for {
           (room) <- this if room.isPrivate is false
         } yield room
 
-        q.list()
+        q.list().toSet
     }
 
     def findRoom(id: Long): Option[Room] = withSession {
