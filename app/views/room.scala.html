@@ -5,11 +5,7 @@
 @main(room.name) {
 
 
-@if(user.isDefined) {
-<div id="chatContent" ng-init="roomId = @room.id; userId = @user.get.uid.get; private_room = @room.isPrivate; is_owned_room = @room.ownerId == @user.get.uid.get; is_room_member = @room.members.map(_.uid.get).contains(user.get.uid.get)">
-} else {
-<div id="chatContent" ng-init="roomId = @room.id; userId = null; private_room = false; is_owned_room = false; is_room_member = false">
-}
+<div id="chatContent" ng-init="roomId = @room.id; userId = @user.map(_.uid).getOrElse("null"); private_room = @room.isPrivate; is_owned_room = @user.map(_.uid.get).getOrElse(0) == @room.ownerId; is_room_member = @room.members.map(_.uid.get).contains(user.map(_.uid.get));">
     <div id="onChat" class="" ng-controller="Chat.Controller">
         <div class="messages-chat">
             <header>
