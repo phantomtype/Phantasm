@@ -6,22 +6,22 @@
 	"bundle": "./d.ts/DefinitelyTyped/bundle.d.ts",
 	"installed": {
 		"jquery/jquery.d.ts": {
-			"commit": "b208dde588cfe991dd1ec7e0d389e2b8023cff35"
+			"commit": "fb5af844660df6e8f1f2a69e163f27aff42f3948"
 		},
 		"angularjs/angular.d.ts": {
-			"commit": "b208dde588cfe991dd1ec7e0d389e2b8023cff35"
+			"commit": "fb5af844660df6e8f1f2a69e163f27aff42f3948"
 		},
 		"angularjs/angular-route.d.ts": {
-			"commit": "b208dde588cfe991dd1ec7e0d389e2b8023cff35"
+			"commit": "fb5af844660df6e8f1f2a69e163f27aff42f3948"
 		},
 		"notify.js/notify.js.d.ts": {
-			"commit": "b208dde588cfe991dd1ec7e0d389e2b8023cff35"
+			"commit": "fb5af844660df6e8f1f2a69e163f27aff42f3948"
 		},
 		"marked/marked.d.ts": {
-			"commit": "b208dde588cfe991dd1ec7e0d389e2b8023cff35"
+			"commit": "fb5af844660df6e8f1f2a69e163f27aff42f3948"
 		},
 		"highlightjs/highlightjs.d.ts": {
-			"commit": "b208dde588cfe991dd1ec7e0d389e2b8023cff35"
+			"commit": "fb5af844660df6e8f1f2a69e163f27aff42f3948"
 		}
 	}
 }
