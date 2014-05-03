@@ -156,16 +156,19 @@ module Chat {
 
                 if ($scope.busy) return
                 $scope.busy = true
+
                 var to: number = $scope.messages.length > 0 ? $scope.messages[0].comment.created : new Date().getTime()
                 $http.get("/room/" + $scope.roomId + "/messages/" + to).success((result) => {
-                    result.forEach((message: Message) => {
-                        $scope.messages.unshift(message)
-                    })
-                    setTimeout(() => {
-                        $("div.messages").animate({ scrollTop: $("#message-" + result[0].comment.id)[0].offsetTop }, 1)
-                        $scope.busy = false
-                        $scope.$digest()
-                    }, 300)
+                    if (result.length > 0) {
+                        result.forEach((message:Message) => {
+                            $scope.messages.unshift(message)
+                        })
+                        setTimeout(() => {
+                            $("div.messages").animate({ scrollTop: $("#message-" + result[0].comment.id)[0].offsetTop }, 1)
+                            $scope.$digest()
+                            $scope.busy = false
+                        }, 100)
+                    }
                 })
             }
 
