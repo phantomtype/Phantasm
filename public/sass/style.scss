@@ -20,9 +20,6 @@ body {
 
   @media(min-width: 768px) {
     .navbar-nav > li {
-      > a {
-        padding: 10px 0;
-      }
       > button > a {
         color: #fff;
       }
@@ -150,6 +147,11 @@ img.avatar {
 img.avatar-small {
     max-width: 28px;
     max-height: 28px;
+}
+
+img.avatar-very-small {
+  max-width: 20px;
+  max-height: 20px;
 }
 
 .row

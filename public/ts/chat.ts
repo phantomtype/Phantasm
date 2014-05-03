@@ -40,11 +40,28 @@ interface UserSetting {
     desktopNotifications: boolean
 }
 
+module Header {
+    export interface Scope extends ng.IScope {
+        room: Room
+    }
+
+    export class Controller {
+        constructor($scope: Scope, RoomService) {
+            $scope.room = RoomService
+        }
+    }
+}
+
 module Account {
     export interface  Scope extends  ng.IScope {
         userSetting: UserSetting
         get: () => void
         save: () => void
+
+        isSupportedNotification : boolean
+        needsPermission : boolean
+        requestPermission: ()=> void
+        notify : notify.INotify
     }
 
     export class Controller {
@@ -59,6 +76,16 @@ module Account {
             $scope.save = () => {
                 $http.post("/account/save", $scope.userSetting).success((data) => {
                     alert("save changed!")
+                })
+            }
+
+            $scope.isSupportedNotification = Notify.isSupported()
+            $scope.needsPermission = Notify.needsPermission()
+
+            $scope.requestPermission = () => {
+                Notify.requestPermission(()=> {
+                    $scope.userSetting.desktopNotifications = true
+                    $scope.needsPermission = false
                 })
             }
         }
@@ -109,6 +136,7 @@ module Rooms {
 module Chat {
 
     export interface Scope extends ng.IScope {
+        room: Room
         roomId: number
         userId: number
         private_room: boolean
@@ -126,12 +154,6 @@ module Chat {
         rooms: Room[]
         userSetting: UserSetting
 
-        isSupportedNotification : boolean
-        needsPermission : boolean
-        requestPermission: ()=> void
-        setNotification: (boolean)=> void
-        notify : notify.INotify
-
         busy: boolean
 
         showAddMemberForm: boolean
@@ -144,10 +166,11 @@ module Chat {
     }
 
     export class Controller {
-        constructor($scope:Scope, $http:ng.IHttpService) {
+        constructor($scope:Scope, $http:ng.IHttpService, RoomService) {
             $scope.replyTo = null
             $scope.messages = []
             $scope.busy = false
+            $scope.room = RoomService
 
             $scope.read_more = () => {
                 if ($(".messages")[0].scrollTop > 0) {
@@ -176,6 +199,13 @@ module Chat {
             $http.get("/rooms").success((result) => {
                 result.forEach((room: Room) => {
                     $scope.rooms.push(room)
+
+                    if (room.id == $scope.roomId) {
+                        $scope.room.name = room.name
+                        $scope.room.is_private = room.is_private
+                        $scope.room.latest_post = room.latest_post
+                        $scope.room.owner = room.owner
+                    }
                 })
             })
 
@@ -266,19 +296,6 @@ module Chat {
                 })
             }
 
-            $scope.isSupportedNotification = Notify.isSupported()
-            $scope.needsPermission = Notify.needsPermission()
-
-            $scope.requestPermission = () => {
-                Notify.requestPermission(()=> {
-                    $scope.userSetting.desktopNotifications = true
-                })
-            }
-
-            $scope.setNotification = (value: boolean) => {
-                $scope.userSetting.desktopNotifications = value
-            }
-
 
             // add room member
 
@@ -340,6 +357,9 @@ app.config(["marked", (marked: MarkedStatic) => {
         }
     })
 }])
+app.factory("RoomService", () => {
+    return {}
+})
 .controller("Rooms.Controller", Rooms.Controller)
 .controller("Chat.Controller", Chat.Controller)
 .controller("Account.Controller", Account.Controller)

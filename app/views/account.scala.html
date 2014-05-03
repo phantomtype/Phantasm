@@ -9,11 +9,20 @@
         <form class="form-horizontal" role="form">
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" ng-model="userSetting.desktopNotifications"> Desktop Notifications
-                        </label>
+
+                    <div ng-if="isSupportedNotification">
+                        <div ng-if="needsPermission">
+                            <button class="btn btn-link" ng-click="requestPermission()">Use Desktop notifications</button>
+                        </div>
+                        <div ng-if="!needsPermission">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" ng-model="userSetting.desktopNotifications"> Desktop Notifications
+                                </label>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </div>
 
@@ -24,7 +33,5 @@
             </div>
         </form>
     </div>
-
-<script type='text/javascript' src='@routes.Assets.at("js/chat.js")'></script>
 
 }
