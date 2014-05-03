@@ -14,6 +14,7 @@ interface Message {
     user:    Member
     comment: Comment
     kind:    string
+    in_mouse_over: boolean
 }
 
 interface Member {

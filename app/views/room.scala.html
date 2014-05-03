@@ -31,13 +31,13 @@
                 </div>
             </header>
             <div class="messages" infinite-scroll="read_more()" infinite-scroll-disabled='busy' id="messages">
-                <div class="message" ng-repeat="msg in messages" id="message-{{msg.comment.id}}">
+                <div class="message" ng-repeat="msg in messages" id="message-{{msg.comment.id}}" ng-mouseover="msg.in_mouse_over=true" ng-mouseleave="msg.in_mouse_over=false">
                     <img class="avatar" ng-src="{{msg.user.avatarUrl}}"/>
                     <span class="name">{{msg.user.fullName}}</span>
                     <span class="option">
                         <p class="datetime">{{msg.comment.created | date:'@Messages("phantasm.date.pattern.short")'}}</p>
                         @if(user.isDefined) {
-                            <button class="reply btn btn-default btn-xs" ng-click="reply(msg)">reply</button>
+                            <button class="reply btn btn-default btn-xs" ng-click="reply(msg)" ng-if="msg.in_mouse_over">reply</button>
                         }
                     </span>
                     <div ng-if="msg.comment.replyTo">
@@ -59,7 +59,7 @@
                         <span>{{replyTo.user.fullName}}</span>
                         <div marked="replyTo.message"></div>
                     </blockquote>
-                    <a href="#" ng-click="replyCancel()" class="pull-right">(cancel)</a>
+                    <button type="button" ng-click="replyCancel()" class="pull-right btn btn-default">Cancel</button>
                 </div>
                 <textarea ng-keypress="talk($event)" ng-model="talkBody" id="talkBody" class="form-control" placeholder="input message here. (Shift+Enter to send)"></textarea>
             } else {
