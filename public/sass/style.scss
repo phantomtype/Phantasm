@@ -1,6 +1,8 @@
 @charset "utf-8";
 
 $icon-font-path: '../lib/bootstrap-sass-official/fonts/bootstrap/';
+$fa-font-path: '../lib/font-awesome/fonts/';
+@import "../lib/font-awesome/scss/font-awesome";
 @import "variables";
 @import "../lib/bootstrap-sass-official/stylesheets/bootstrap";
 

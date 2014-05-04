@@ -21,7 +21,8 @@
     "angular-marked": "Hypercubed/angular-marked#0.0.5",
     "notify.js": "~1.2.0",
     "ngInfiniteScroll": "~1.1.0",
-    "highlightjs": "~8.0.0"
+    "highlightjs": "~8.0.0",
+    "font-awesome": "~4.0.3"
   },
   "exportsOverride": {
     "bootstrap-sass-official": {

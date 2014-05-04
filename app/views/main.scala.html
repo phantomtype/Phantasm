@@ -42,13 +42,13 @@
                             @user.get.fullName <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu" role="menu" >
-                            <li><a href="/account">@Messages("phantasm.main.account")</a></li>
-                            <li><a href="/logout">@Messages("phantasm.main.logout")</a></li>
+                            <li><a href="/account"><i class="fa fa-cog"></i> @Messages("phantasm.main.account")</a></li>
+                            <li><a href="/logout"><i class="fa fa-sign-out"></i> @Messages("phantasm.main.logout")</a></li>
                         </ul>
                     </li>
                 } else {
                     <li>
-                        <button type="button" class="btn btn-primary navbar-btn"><a href="/login">Login</a></button>
+                        <button type="button" class="btn btn-primary navbar-btn"><a href="/login"><i class="fa fa-sign-in"></i> Login</a></button>
                     </li>
                 }
             </ul>

@@ -15,7 +15,7 @@
                     <span class="option">
                         <p class="datetime">{{msg.comment.created | date:'@Messages("phantasm.date.pattern.short")'}}</p>
                         @if(user.isDefined) {
-                            <button class="reply btn btn-default btn-xs" ng-click="reply(msg)" ng-if="msg.in_mouse_over">reply</button>
+                            <button type="button" class="reply btn btn-default btn-xs" ng-click="reply(msg)" ng-if="msg.in_mouse_over"><i class="fa fa-reply"></i> Reply</button>
                         }
                     </span>
                     <div ng-if="msg.comment.replyTo">
@@ -41,13 +41,13 @@
                 </div>
                 <textarea ng-keypress="talk($event)" ng-model="talkBody" id="talkBody" class="form-control" placeholder="input message here. (Shift+Enter to send)"></textarea>
             } else {
-                <a href="/login" class="btn btn-primary btn-lg btn-block">Please Login to join room</a>
+                <a href="/login" class="btn btn-primary btn-lg btn-block"><i class="fa fa-sign-in"></i> Please Login to join room</a>
             }
             </div>
         </div>
         <aside id="sidebar">
             <ul class="members">
-                <li class="header">members</li>
+                <li class="header"><i class="fa fa-users"></i> Members</li>
                 <li ng-repeat="member in members" class="{{member.online ? 'online' : 'offline'}}">
                     <img class="avatar-small" ng-src="{{member.avatarUrl}}" />
                     <span>{{member.fullName}}</span>
@@ -71,7 +71,7 @@
             </ul>
 
             <ul class="rooms">
-                <li class="header">rooms</li>
+                <li class="header"><i class="fa fa-rocket"></i> rooms</li>
                 <li ng-repeat="room in rooms">
                     <img class="avatar-small" ng-src="{{room.owner.avatarUrl}}" />
                     <a ng-href="/room/{{room.id}}">{{room.name}}</a>
