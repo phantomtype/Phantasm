@@ -11,13 +11,15 @@
                     <th><i class="fa fa-rocket"></i> Name</th>
                     <th><i class="fa fa-comment"></i> Latest Post</th>
                     <th><i class="fa fa-user"></i> Owner</th>
+                    <th><i class="fa fa-users"></i> Members</th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="room in rooms" ng-click="openRoom(room)">
                     <td><a ng-href="/room/{{room.id}}">{{room.name}} <span ng-if="room.is_private"><span class="fa fa-lock"></span></span></a></td>
-                    <td>{{room.latest_post.created | date:'@Messages("phantasm.date.pattern.long")'}} <img class="avatar-small" ng-src="{{room.latest_post.user.avatarUrl}}" /></td>
+                    <td><img class="avatar-small" ng-src="{{room.latest_post.user.avatarUrl}}" /> {{room.latest_post.created | date:'@Messages("phantasm.date.pattern.long")'}}</td>
                     <td><img class="avatar-small" ng-src="{{room.owner.avatarUrl}}" /> {{room.owner.fullName}}</td>
+                    <td><img class="avatar-small" ng-repeat="m in room.members" ng-src="{{m.avatarUrl}}" /></td>
                 </tr>
             </tbody>
         </table>

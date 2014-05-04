@@ -32,6 +32,11 @@ body {
 
 #rooms {
   padding-top: 50px;
+
+  th {
+    background-color: #cd6689;
+    color: #fff;
+  }
 }
 
 #chatContent {
@@ -151,8 +156,8 @@ img.avatar {
 }
 
 img.avatar-small {
-    max-width: 28px;
-    max-height: 28px;
+    max-width: 22px;
+    max-height: 22px;
 }
 
 img.avatar-very-small {

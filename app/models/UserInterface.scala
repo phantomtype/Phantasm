@@ -66,7 +66,8 @@ object JsonWrites {
         "name" -> room.name,
         "owner" -> room.owner,
         "is_private" -> room.isPrivate,
-        "latest_post" -> latest_post
+        "latest_post" -> latest_post,
+        "members" -> room.members
       )
       result
     }
