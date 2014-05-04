@@ -90,6 +90,10 @@ body {
                       }
                     }
                 }
+
+                div.message:hover {
+                  background-color: lighten($primary, 37%);
+                }
             }
 
             .talk {
