@@ -39,7 +39,7 @@
                     </blockquote>
                     <button type="button" ng-click="replyCancel()" class="pull-right btn btn-default">Cancel</button>
                 </div>
-                <textarea ng-keypress="talk($event)" ng-model="talkBody" id="talkBody" class="form-control" placeholder="input message here. (Shift+Enter to send)"></textarea>
+                <textarea ng-keypress="talk($event)" ng-keydown="talkBodyExpand()" ng-model="talkBody" id="talkBody" class="form-control" placeholder="input message here. (Shift+Enter to send)"></textarea>
             } else {
                 <a href="/login" class="btn btn-primary btn-lg btn-block"><i class="fa fa-sign-in"></i> Please Login to join room</a>
             }

@@ -104,12 +104,16 @@ body {
             }
 
             .talk {
-                display: flex;
-                flex-direction: column;
-                margin: 5px 5px 20px 5px;
+              display: flex;
+              flex-direction: column;
+              margin: 5px 5px 20px 5px;
 
               blockquote.reply {
                 background-color: #ffe;
+              }
+
+              textarea {
+                height: 62px;
               }
             }
         }

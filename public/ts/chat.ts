@@ -143,7 +143,7 @@ module Chat {
         is_room_member: boolean
         is_owned_room: boolean
         messages: Message[]
-        talkBody: String
+        talkBody: string
         talk: (KeyboardEvent) => void
         reply: (msg: Message) => void
         replyCancel: () => void
@@ -163,6 +163,8 @@ module Chat {
         addableUsers: Member[]
         addMember: (Member) => void
         join_room: () => void
+
+        talkBodyExpand: () => void
     }
 
     export class Controller {
@@ -171,6 +173,7 @@ module Chat {
             $scope.messages = []
             $scope.busy = false
             $scope.room = RoomService
+            $scope.talkBody = ""
 
             $scope.read_more = () => {
                 if ($(".messages")[0].scrollTop > 0) {
@@ -285,6 +288,11 @@ module Chat {
                                 $scope.talkBody = ""
                                 $scope.replyTo = null
                             }
+                        }
+
+                        $scope.talkBodyExpand = () => {
+                            var body:any = $("#talkBody")[0]
+                            $("#talkBody").height((body.value.split("\n").length * 19) + 24 + "px")
                         }
                     }
                 })
