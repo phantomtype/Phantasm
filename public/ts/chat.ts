@@ -1,5 +1,9 @@
 /// <reference path="../d.ts/DefinitelyTyped/bundle.d.ts" />
 
+interface Meta {
+    unread: number
+}
+
 interface Room {
     id: number
     name: string
@@ -14,7 +18,9 @@ interface Message {
     user:    Member
     comment: Comment
     kind:    string
+
     in_mouse_over: boolean
+    unread: boolean
 }
 
 interface Member {
@@ -38,6 +44,19 @@ interface UserSetting {
     id: number
     user_id: number
     desktopNotifications: boolean
+}
+
+module Meta {
+    export interface Scope extends ng.IScope {
+        meta: Meta
+    }
+
+    export class Controller {
+        constructor($scope: Scope, meta: Meta) {
+            $scope.meta = meta
+            $scope.meta.unread = 0
+        }
+    }
 }
 
 module Header {
@@ -136,6 +155,7 @@ module Rooms {
 module Chat {
 
     export interface Scope extends ng.IScope {
+        meta: Meta
         room: Room
         roomId: number
         userId: number
@@ -165,10 +185,12 @@ module Chat {
         join_room: () => void
 
         talkBodyExpand: () => void
+        read_message: (msg: Message) => void
     }
 
     export class Controller {
-        constructor($scope:Scope, $http:ng.IHttpService, RoomService) {
+        constructor($scope:Scope, $http:ng.IHttpService, RoomService, meta: Meta) {
+            $scope.meta = meta
             $scope.replyTo = null
             $scope.messages = []
             $scope.busy = false
@@ -251,6 +273,11 @@ module Chat {
                                     }, 5000)
                                 }
 
+                                if (data.user.id != $scope.userId) {
+                                    $scope.meta.unread ++
+                                    data.unread = true
+                                }
+
                                 $scope.$digest()
 
                                 if (!$scope.busy) {
@@ -296,6 +323,13 @@ module Chat {
                         }
                     }
                 })
+            }
+
+            $scope.read_message = (msg:Message) => {
+                if (msg.unread) {
+                    msg.unread = false
+                    $scope.meta.unread --
+                }
             }
 
             if ($scope.userId != null) {
@@ -368,6 +402,10 @@ app.config(["marked", (marked: MarkedStatic) => {
 app.factory("RoomService", () => {
     return {}
 })
+app.factory("meta", () => {
+    return {}
+})
+.controller("Meta.Controller", Meta.Controller)
 .controller("Rooms.Controller", Rooms.Controller)
 .controller("Chat.Controller", Chat.Controller)
 .controller("Account.Controller", Account.Controller)
