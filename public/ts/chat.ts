@@ -1,7 +1,8 @@
 /// <reference path="../d.ts/DefinitelyTyped/bundle.d.ts" />
 
 interface Meta {
-    unread: number
+    incrementUnreadCount: () => void
+    decrementUnreadCount: () => void
 }
 
 interface Room {
@@ -48,13 +49,35 @@ interface UserSetting {
 
 module Meta {
     export interface Scope extends ng.IScope {
-        meta: Meta
+        meta: PrivateMeta
+    }
+
+    export interface PrivateMeta extends Meta {
+        unread: number
+        originalTitle: string
+        updateTitle: () => void
     }
 
     export class Controller {
-        constructor($scope: Scope, meta: Meta) {
+        constructor($scope: Scope, meta: PrivateMeta) {
             $scope.meta = meta
             $scope.meta.unread = 0
+            $scope.meta.originalTitle = document.title
+
+            $scope.meta.incrementUnreadCount = () => {
+                $scope.meta.unread ++
+                $scope.meta.updateTitle()
+            }
+
+            $scope.meta.decrementUnreadCount = () => {
+                $scope.meta.unread --
+                $scope.meta.updateTitle()
+            }
+
+            $scope.meta.updateTitle = () => {
+                var unread_count = $scope.meta.unread == 0 ? "" : "(" + $scope.meta.unread + ")"
+                document.title = unread_count + $scope.meta.originalTitle
+            }
         }
     }
 }
@@ -274,7 +297,7 @@ module Chat {
                                 }
 
                                 if (data.user.id != $scope.userId) {
-                                    $scope.meta.unread ++
+                                    $scope.meta.incrementUnreadCount()
                                     data.unread = true
                                 }
 
@@ -328,7 +351,7 @@ module Chat {
             $scope.read_message = (msg:Message) => {
                 if (msg.unread) {
                     msg.unread = false
-                    $scope.meta.unread --
+                    $scope.meta.decrementUnreadCount()
                 }
             }
 
