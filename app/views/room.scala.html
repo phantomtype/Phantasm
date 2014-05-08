@@ -1,9 +1,6 @@
 @(room: Room)(implicit flash: play.api.mvc.Flash, user:Option[models.User], request: RequestHeader)
 
-@import controllers._
-
 @main(room.name) {
-
 
 <div id="chatContent" ng-init="roomId = @room.id; userId = @user.map(_.uid).getOrElse("null"); private_room = @room.isPrivate; is_owned_room = @user.map(_.uid.get).getOrElse(0) == @room.ownerId; is_room_member = @room.members.map(_.uid.get).contains(user.map(_.uid.get));">
     <div id="onChat" class="" ng-controller="Chat.Controller">
@@ -15,7 +12,8 @@
                     <span class="option">
                         <p class="datetime">{{msg.comment.created | date:'@Messages("phantasm.date.pattern.short")'}}</p>
                         @if(user.isDefined) {
-                            <button type="button" class="reply btn btn-default btn-xs" ng-click="reply(msg)" ng-if="msg.in_mouse_over"><i class="fa fa-reply"></i> Reply</button>
+                            <button type="button" class="btn btn-default btn-xs" ng-click="reply(msg)" ng-if="msg.in_mouse_over"><i class="fa fa-reply"></i> Reply</button>
+                            <button type="button" class="btn btn-default btn-xs" ng-click="quote(msg)" ng-if="msg.in_mouse_over"><i class="fa fa-quote-left"></i> Quote</button>
                         }
                     </span>
                     <div ng-if="msg.comment.replyTo">

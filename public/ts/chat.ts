@@ -189,6 +189,7 @@ module Chat {
         talkBody: string
         talk: (KeyboardEvent) => void
         reply: (msg: Message) => void
+        quote: (msg: Message) => void
         replyCancel: () => void
         read_more: () => void
         replyTo: Comment
@@ -321,6 +322,11 @@ module Chat {
 
                         $scope.reply = (message:Message) => {
                             $scope.replyTo = message.comment
+                            $("#talkBody").focus()
+                        }
+
+                        $scope.quote = (message:Message) => {
+                            $scope.talkBody = $scope.talkBody + "> " + message.comment.message.split("\n").join("\n> ") + "\n\n"
                             $("#talkBody").focus()
                         }
 
