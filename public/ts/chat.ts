@@ -346,6 +346,7 @@ module Chat {
                             }
                         }
 
+                        // want to delete. it required when input empty line break
                         $scope.talkBodyExpand = () => {
                             var body:any = $("#talkBody")[0]
                             $("#talkBody").height((body.value.split("\n").length * 19) + 24 + "px")
@@ -353,6 +354,10 @@ module Chat {
                     }
                 })
             }
+
+            $scope.$watch('talkBody', (newBody, oldBody) => {
+                $("#talkBody").height((newBody.split("\n").length * 19) + 24 + "px")
+            }, true)
 
             $scope.read_message = (msg:Message) => {
                 if (msg.unread) {
