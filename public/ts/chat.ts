@@ -320,20 +320,6 @@ module Chat {
                             }
                         }
 
-                        $scope.reply = (message:Message) => {
-                            $scope.replyTo = message.comment
-                            $("#talkBody").focus()
-                        }
-
-                        $scope.quote = (message:Message) => {
-                            $scope.talkBody = $scope.talkBody + "> " + message.comment.message.split("\n").join("\n> ") + "\n\n"
-                            $("#talkBody").focus()
-                        }
-
-                        $scope.replyCancel = () => {
-                            $scope.replyTo = null
-                        }
-
                         $scope.talk = (e:KeyboardEvent) => {
                             if ((e.charCode == 13 || e.keyCode == 13) && (e.shiftKey || detectmob())) {
                                 e.preventDefault()
@@ -345,14 +331,28 @@ module Chat {
                                 $scope.replyTo = null
                             }
                         }
-
-                        // want to delete. it required when input empty line break
-                        $scope.talkBodyExpand = () => {
-                            var body:any = $("#talkBody")[0]
-                            $("#talkBody").height((body.value.split("\n").length * 19) + 24 + "px")
-                        }
                     }
                 })
+            }
+
+            $scope.reply = (message:Message) => {
+                $scope.replyTo = message.comment
+                $("#talkBody").focus()
+            }
+
+            $scope.quote = (message:Message) => {
+                $scope.talkBody = $scope.talkBody + "> " + message.comment.message.split("\n").join("\n> ") + "\n\n"
+                $("#talkBody").focus()
+            }
+
+            $scope.replyCancel = () => {
+                $scope.replyTo = null
+            }
+
+            // want to delete. it required when input empty line break
+            $scope.talkBodyExpand = () => {
+                var body:any = $("#talkBody")[0]
+                $("#talkBody").height((body.value.split("\n").length * 19) + 24 + "px")
             }
 
             $scope.$watch('talkBody', (newBody, oldBody) => {
