@@ -64,7 +64,11 @@ object Application extends Controller with securesocial.core.SecureSocial {
   def room(roomId: Long) = UserAwareAction { implicit rs =>
     myRoom(roomId) match {
       case Some(r) => Ok(views.html.room(r))
-      case None => NotFound
+      case None =>
+        user match {
+          case Some(u) => Redirect(routes.Application.index()).flashing("error" -> "the room not found.")
+          case None => Ok(views.html.login())
+        }
     }
   }
 

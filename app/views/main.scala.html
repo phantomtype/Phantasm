@@ -57,6 +57,18 @@
 </header>
 
 <div class="container">
+    @request.flash.get("success").map { msg =>
+        <div class="alert alert-info">
+            @msg
+        </div>
+    }
+
+    @request.flash.get("error").map { msg =>
+        <div class="alert alert-danger">
+            @msg
+        </div>
+    }
+
     @content
 
     <script type='text/javascript' src='@routes.Assets.at("js/chat.js")'></script>
