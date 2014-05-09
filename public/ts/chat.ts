@@ -11,6 +11,7 @@ interface Room {
     owner: Member
     is_private: boolean
     latest_post: Comment
+    members: Member[]
 }
 
 interface Message {
@@ -182,7 +183,6 @@ module Chat {
         room: Room
         roomId: number
         userId: number
-        private_room: boolean
         is_room_member: boolean
         is_owned_room: boolean
         messages: Message[]
@@ -254,6 +254,8 @@ module Chat {
                         $scope.room.is_private = room.is_private
                         $scope.room.latest_post = room.latest_post
                         $scope.room.owner = room.owner
+                        $scope.is_owned_room = room.owner.id == $scope.userId
+                        $scope.is_room_member = room.members.map((m) => m.id).indexOf($scope.userId) != -1
                     }
                 })
             })
@@ -315,7 +317,7 @@ module Chat {
                             } else {
                                 data.members.forEach((member:Member) => {
                                     var index = $scope.members.map((m:Member) => m.id).indexOf(member.id)
-                                    $scope.members[index].online = true
+                                    if (index != -1) $scope.members[index].online = true
                                 })
                             }
                         }

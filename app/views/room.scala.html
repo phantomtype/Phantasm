@@ -2,7 +2,7 @@
 
 @main(room.name) {
 
-<div id="chatContent" ng-init="roomId = @room.id; userId = @user.map(_.uid).getOrElse("null"); private_room = @room.isPrivate; is_owned_room = @user.map(_.uid.get).getOrElse(0) == @room.ownerId; is_room_member = @room.members.map(_.uid.get).contains(user.map(_.uid.get));">
+<div id="chatContent" ng-init="roomId = @room.id; userId = @user.map(_.uid.get).getOrElse("null")">
     <div id="onChat" class="" ng-controller="Chat.Controller">
         <div class="messages-chat">
             <div class="messages" infinite-scroll="read_more()" infinite-scroll-disabled='busy' id="messages">
@@ -50,7 +50,7 @@
                     <img class="avatar-small" ng-src="{{member.avatarUrl}}" />
                     <span>{{member.fullName}}</span>
                 </li>
-                <span ng-if="private_room && is_owned_room">
+                <span ng-if="room.is_private && is_owned_room">
                     <li ng-if="!showAddMemberForm">
                         <button class="btn btn-default btn-xs" ng-click="openAddMemberForm()">add room member</button>
                     </li>
@@ -61,7 +61,7 @@
                     </li>
                 </span>
 
-                <span ng-if="!private_room && user_id != null">
+                <span ng-if="!room.is_private && user_id != null">
                     <li ng-if="!is_room_member">
                         <button class="btn btn-default btn-xs" ng-click="join_room()">join as room member</button>
                     </li>
