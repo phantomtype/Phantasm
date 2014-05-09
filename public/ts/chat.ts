@@ -199,6 +199,7 @@ module Chat {
         userSetting: UserSetting
 
         busy: boolean
+        connectionClosed: boolean
 
         showAddMemberForm: boolean
         openAddMemberForm: () => void
@@ -213,11 +214,12 @@ module Chat {
     }
 
     export class Controller {
-        constructor($scope:Scope, $http:ng.IHttpService, RoomService, meta: Meta) {
+        constructor($scope:Scope, $http:ng.IHttpService, RoomService, meta: Meta, $window: ng.IWindowService) {
             $scope.meta = meta
             $scope.replyTo = null
             $scope.messages = []
             $scope.busy = false
+            $scope.connectionClosed = false
             $scope.room = RoomService
             $scope.talkBody = ""
 
@@ -331,6 +333,12 @@ module Chat {
                                 }))
                                 $scope.talkBody = ""
                                 $scope.replyTo = null
+                            }
+                        }
+
+                        $window.onfocus = () => {
+                            if (chatSocket.readyState == WebSocket.CLOSED) {
+                                $scope.connectionClosed = true
                             }
                         }
                     }

@@ -28,6 +28,7 @@
             </div>
             <div class="talk">
             @if(user.isDefined) {
+                <a ng-if="connectionClosed" href="/login" class="btn btn-danger btn-lg btn-block"><i class="fa fa-sign-out"></i> Connection closed. Please login again.</a>
                 <div ng-if="replyTo">
                     reply to
                     <blockquote class="reply">
