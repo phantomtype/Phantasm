@@ -61,8 +61,8 @@
                     </li>
                 </span>
 
-                <span ng-if="!room.is_private && user_id != null">
-                    <li ng-if="!is_room_member">
+                <span ng-if="!room.is_private && userId != null && !is_room_member">
+                    <li>
                         <button class="btn btn-default btn-xs" ng-click="join_room()">join as room member</button>
                     </li>
                 </span>
