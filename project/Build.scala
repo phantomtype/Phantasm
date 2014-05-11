@@ -12,7 +12,7 @@ object ApplicationBuild extends Build {
     jdbc,
     "com.typesafe.play" %% "play" % playVersion,
     "com.typesafe.play" %% "play-jdbc" % playVersion,
-    "com.typesafe.slick" %% "slick" % "2.0.0",
+    "com.typesafe.slick" %% "slick" % "2.0.1",
     "org.slf4j" % "slf4j-nop" % "1.6.4",
     "javax.servlet" % "javax.servlet-api" % "3.0.1", //needed by org.reflections
     "com.typesafe.play" %% "play-slick" % "0.6.0.1",
