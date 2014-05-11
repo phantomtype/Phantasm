@@ -7,7 +7,7 @@ object ApplicationBuild extends Build {
   val appName         = "phantasm"
   val appVersion      = "1.0"
 
-  val playVersion = "2.2.1"
+  val playVersion = "2.2.2"
   val appDependencies = Seq(
     jdbc,
     "com.typesafe.play" %% "play" % playVersion,
