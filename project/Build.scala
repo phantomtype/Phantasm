@@ -16,8 +16,7 @@ object ApplicationBuild extends Build {
     "org.slf4j" % "slf4j-nop" % "1.6.4",
     "javax.servlet" % "javax.servlet-api" % "3.0.1", //needed by org.reflections
     "com.typesafe.play" %% "play-slick" % "0.6.0.1",
-//    "ws.securesocial" %% "securesocial" % "2.1.3",
-    "securesocial" %% "securesocial" % "master-SNAPSHOT",
+    "ws.securesocial" %% "securesocial" % "2.1.3",
     "joda-time" % "joda-time" % "2.3",
     "org.joda" % "joda-convert" % "1.5",
     "com.github.tototoshi" %% "slick-joda-mapper" % "1.0.1",
