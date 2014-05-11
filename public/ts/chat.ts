@@ -199,7 +199,8 @@ module Chat {
         userSetting: UserSetting
 
         busy: boolean
-        connectionClosed: boolean
+        chatSocket: WebSocket
+        connectionClosedEvent: CloseEvent
 
         showAddMemberForm: boolean
         openAddMemberForm: () => void
@@ -214,14 +215,14 @@ module Chat {
     }
 
     export class Controller {
-        constructor($scope:Scope, $http:ng.IHttpService, RoomService, meta: Meta, $window: ng.IWindowService) {
+        constructor($scope:Scope, $http:ng.IHttpService, RoomService, meta: Meta) {
             $scope.meta = meta
             $scope.replyTo = null
             $scope.messages = []
             $scope.busy = false
-            $scope.connectionClosed = false
             $scope.room = RoomService
             $scope.talkBody = ""
+            $scope.connectionClosedEvent = null
 
             $scope.read_more = () => {
                 if ($(".messages")[0].scrollTop > 0) {
@@ -274,15 +275,14 @@ module Chat {
 
             if ($scope.userId != null) {
                 $http.get("/room/" + $scope.roomId + "/wspath").success((result) => {
-                    var chatSocket = new WebSocket(result.path)
-
-                    chatSocket.onopen = () => {
-                        chatSocket.onmessage = (event) => {
+                    $scope.chatSocket = new WebSocket(result.path)
+                    $scope.chatSocket.onopen = () => {
+                        $scope.chatSocket.onmessage = (event) => {
                             var data:Message = JSON.parse(event.data)
 
                             // Handle errors
                             if (data.error) {
-                                chatSocket.close()
+                                $scope.chatSocket.close()
                                 console.log(data.error)
                                 return
                             } else {
@@ -324,21 +324,19 @@ module Chat {
                             }
                         }
 
+                        $scope.chatSocket.onclose = (ev: CloseEvent) => {
+                            $scope.connectionClosedEvent = ev
+                        }
+
                         $scope.talk = (e:KeyboardEvent) => {
                             if ((e.charCode == 13 || e.keyCode == 13) && (e.shiftKey || detectmob())) {
                                 e.preventDefault()
-                                chatSocket.send(JSON.stringify({
+                                $scope.chatSocket.send(JSON.stringify({
                                     text: $scope.talkBody,
                                     replyTo: $scope.replyTo == null ? null : $scope.replyTo.id
                                 }))
                                 $scope.talkBody = ""
                                 $scope.replyTo = null
-                            }
-                        }
-
-                        $window.onfocus = () => {
-                            if (chatSocket.readyState == WebSocket.CLOSED) {
-                                $scope.connectionClosed = true
                             }
                         }
                     }
