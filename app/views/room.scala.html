@@ -6,7 +6,7 @@
     <div id="onChat" class="" ng-controller="Chat.Controller">
         <div class="messages-chat">
             <div class="messages" infinite-scroll="read_more()" infinite-scroll-disabled='busy' id="messages">
-                <div class="message {{msg.unread ? 'unread' : ''}}" ng-repeat="msg in messages" id="message-{{msg.comment.id}}" ng-mouseover="msg.in_mouse_over=true;read_message(msg)" ng-mouseleave="msg.in_mouse_over=false">
+                <div class="message message-{{msg.kind}} {{msg.unread ? 'unread' : ''}}" ng-repeat="msg in messages" id="message-{{msg.comment.id}}" ng-mouseover="msg.in_mouse_over=true;read_message(msg)" ng-mouseleave="msg.in_mouse_over=false">
                     <img class="avatar" ng-src="{{msg.user.avatarUrl}}"/>
                     <span class="name">{{msg.user.fullName}}</span>
                     <span class="option">
@@ -26,7 +26,7 @@
                     <div class="comment" marked="msg.comment.message"></div>
                 </div>
             </div>
-            <div class="talk">
+            <div class="talk-body">
             @if(user.isDefined) {
                 <a ng-if="connectionClosedEvent" href="/" class="btn btn-danger btn-lg btn-block"><i class="fa fa-warning"></i> Connection closed. cause [{{connectionClosedEvent.reason}}:{{connectionClosedEvent.code}}]. Please reload.</a>
                 <div ng-if="replyTo">

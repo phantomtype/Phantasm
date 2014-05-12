@@ -101,6 +101,22 @@ body {
                     }
                 }
 
+                .message-join {
+                  img {
+                    height: 18px;
+                    width: 18px;
+                  }
+                  font-size: 65%;
+                }
+
+                .message-quit {
+                  img {
+                    height: 18px;
+                    width: 18px;
+                  }
+                  font-size: 65%;
+                }
+
                 div.message:hover {
                   background-color: lighten($primary, 37%);
                 }
@@ -110,7 +126,7 @@ body {
                 }
             }
 
-            .talk {
+            .talk-body {
               display: flex;
               flex-direction: column;
               margin: 5px 5px 20px 5px;
@@ -155,6 +171,7 @@ body {
 
             li.offline {
               color: #ccc;
+              opacity: 0.5;
             }
 
             li.online {

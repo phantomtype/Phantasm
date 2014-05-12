@@ -317,9 +317,19 @@ module Chat {
                                     }, 300)
                                 }
                             } else {
-                                data.members.forEach((member:Member) => {
-                                    var index = $scope.members.map((m:Member) => m.id).indexOf(member.id)
-                                    if (index != -1) $scope.members[index].online = true
+                                data.comment = new Comment
+                                data.comment.user = data.user
+                                data.comment.created = Date.now()
+                                if (data.kind == "join") {
+                                    data.comment.message = "joined room"
+                                } else if (data.kind == "quit") {
+                                    data.comment.message = "left room"
+                                }
+                                $scope.messages.push(data)
+
+                                var online_ids = data.members.map((m:Member) => m.id)
+                                $scope.members.forEach((member: Member) => {
+                                    member.online = online_ids.indexOf(member.id) != -1 ? true : false
                                 })
                             }
                         }
