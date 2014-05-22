@@ -215,7 +215,7 @@ module Chat {
     }
 
     export class Controller {
-        constructor($scope:Scope, $http:ng.IHttpService, RoomService, meta: Meta) {
+        constructor($scope:Scope, $http:ng.IHttpService, RoomService, meta: Meta, $window: ng.IWindowService) {
             $scope.meta = meta
             $scope.replyTo = null
             $scope.messages = []
@@ -336,6 +336,13 @@ module Chat {
 
                         $scope.chatSocket.onclose = (ev: CloseEvent) => {
                             $scope.connectionClosedEvent = ev
+                            document.title = "(closed) " + document.title
+                        }
+
+                        $window.onfocus = () => {
+                            if ($scope.chatSocket.readyState == WebSocket.CLOSED) {
+                                $scope.connectionClosedEvent = <any>{reason: "unknown", code: "unknown"}
+                            }
                         }
 
                         $scope.talk = (e:KeyboardEvent) => {
