@@ -65,6 +65,7 @@ class ChatRoom(roomId: Long) extends Actor {
       } else {
         members = members + user
         sender ! Connected(chatEnumerator)
+        Thread.sleep(1000) // for traffic jam
         self ! NotifyJoin(user)
       }
 

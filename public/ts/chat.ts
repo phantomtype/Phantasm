@@ -306,8 +306,6 @@ module Chat {
                                     data.unread = true
                                 }
 
-                                $scope.$digest()
-
                                 if (!$scope.busy) {
                                     $scope.busy = true
                                     setTimeout(() => {
@@ -332,6 +330,7 @@ module Chat {
                                     member.online = online_ids.indexOf(member.id) != -1 ? true : false
                                 })
                             }
+                            $scope.$digest()
                         }
 
                         $scope.chatSocket.onclose = (ev: CloseEvent) => {
